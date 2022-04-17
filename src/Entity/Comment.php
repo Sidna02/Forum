@@ -13,8 +13,23 @@ class Comment
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[ORM\Column(type: 'text')]
+    private $body;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
+
+    public function setBody(string $body): self
+    {
+        $this->body = $body;
+
+        return $this;
     }
 }
