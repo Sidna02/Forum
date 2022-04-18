@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Hello TopicController!{% endblock %}
 
 {% block body %}
 <style>
@@ -9,8 +9,6 @@
 </style>
 
 <div class="example-wrapper">
-{% for message in app.flashes('success') %}
-    <div class="alert alert-success">{{message}}</div>
-{% endfor %}
+{{form(form)}}
 </div>
 {% endblock %}

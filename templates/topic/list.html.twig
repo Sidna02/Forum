@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TopicController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+<table class="table">
+<thead>
+<tr>
+<th>Title</th>
+<th>Body</th>
+<th>Created At</th>
+</tr>
+</thead>
+<tbody>
+{% for topic in topics %}
+<tr>
+<td>{{topic.title}}</td>
+<td>{{topic.body}}</td>
+<td>{{topic.createdAt | date("H:i A | D ")}}</td>
+</tr>
+
+{% endfor %}
+<tbody>
+</table>
+</div>
+{% endblock %}

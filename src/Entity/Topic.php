@@ -19,6 +19,18 @@ class Topic
     #[ORM\Column(type: 'text')]
     private $body;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'topics')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $creator;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $createdAt;
+    public function __construct(User $user)
+    {
+        $this->creator = $user;
+        
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +56,30 @@ class Topic
     public function setBody(string $body): self
     {
         $this->body = $body;
+
+        return $this;
+    }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?User $creator): self
+    {
+        $this->creator = $creator;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
