@@ -1,16 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Hello HomeController!
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	<style>
+		.example-wrapper {
+			margin: 1em auto;
+			max-width: 800px;
+			width: 95%;
+			font: 18px / 1.5 sans-serif;
+		}
+		.example-wrapper code {
+			background: #F5F5F5;
+			padding: 2px 6px;
+		}
+        .forum-wrapper{
+            display:flex;
+            flex-direction: column;
+            background-color: gray;
+        }
+        .container{
+            width: 75vw;
+            margin: auto;
+            height: 100vh;
+        }
+        .category
+        {
+            background-color: lightgray;
+        }
 
-<div class="example-wrapper">
-{% for message in app.flashes('success') %}
-    <div class="alert alert-success">{{message}}</div>
-{% endfor %}
-</div>
-{% endblock %}
+	</style>
+
+	<div class="container">
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">{{message}}</div>
+		{% endfor %}
+
+		
+			<div class="forum-wrapper">
+            {% for forum in forums %}
+				{{forum}}
+				{% for category in forum.categories %}
+					<div class="category"><a href={{path('')}}>{{category}}</a></div>
+                {% endfor %}
+            {% endfor %}
+			</div>
+			
+
+		
+    </div>
+	{% endblock %}

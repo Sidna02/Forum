@@ -40,7 +40,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 35, nullable: true)]
     private $last_name;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'date', nullable: true)]
     private $birthdate;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
