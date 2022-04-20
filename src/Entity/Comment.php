@@ -16,6 +16,10 @@ class Comment
     #[ORM\Column(type: 'text')]
     private $body;
 
+    #[ORM\ManyToOne(targetEntity: Topic::class, inversedBy: 'comments')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $topic;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +33,18 @@ class Comment
     public function setBody(string $body): self
     {
         $this->body = $body;
+
+        return $this;
+    }
+
+    public function getTopic(): ?Topic
+    {
+        return $this->topic;
+    }
+
+    public function setTopic(?Topic $topic): self
+    {
+        $this->topic = $topic;
 
         return $this;
     }

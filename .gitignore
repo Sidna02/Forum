@@ -9,3 +9,4 @@
 /vendor/
 /.env
 ###< symfony/framework-bundle ###
+migrations/
