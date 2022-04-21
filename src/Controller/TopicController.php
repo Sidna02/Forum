@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Topic;
 use App\Form\TopicCreateType;
+use App\Repository\CategoryRepository;
 use App\Repository\TopicRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -17,10 +18,11 @@ class TopicController extends AbstractController
 {
     private $em;
     private $topicRepository;
-    public function __construct(EntityManagerInterface $em, TopicRepository $topicRepository)
+    public function __construct(EntityManagerInterface $em, TopicRepository $topicRepository, CategoryRepository $categoryRepository)
     {
         $this->em = $em;
         $this->topicRepository = $topicRepository;
+
     }
     #[Route('/topic/create', name: 'app_topic_create')]
     public function create(Request $request): Response
@@ -45,12 +47,13 @@ class TopicController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-    #[Route('/topic/list', name: 'app_topic_list')]
+    #[Route('/category/{id}', name: 'app_topic_list')]
 
-    public function listTopics() : Response
+    public function listTopics($id) : Response
     {
 
-        $topics = $this->topicRepository->findAll();
+
+        $topics = $this->topicRepository->findBy(['category'=>$id], ['createdAt'=>'DESC']);
         return $this->render('topic/list.html.twig.',[
             'topics' => $topics
         ]);

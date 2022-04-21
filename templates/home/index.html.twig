@@ -42,7 +42,7 @@
             {% for forum in forums %}
 				{{forum}}
 				{% for category in forum.categories %}
-					<div class="category"><a href={{path('')}}>{{category}}</a></div>
+					<div class="category"><a href={{path('app_topic_list', {id: category.id})}}>{{category}}</a></div>
                 {% endfor %}
             {% endfor %}
 			</div>

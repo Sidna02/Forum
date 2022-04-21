@@ -1,32 +1,115 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TopicController!{% endblock %}
+{% block title %}Hello TopicController!
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+	<style>
+		.category-forum {
+			display: flex;
+			justify-content: space-between;
+		}
+		.widget {
+			margin-bottom: 10px;
+			margin-top: 10px;
+			height: auto;
+			width: 50%;
 
-<div class="example-wrapper">
-<table class="table">
-<thead>
-<tr>
-<th>Title</th>
-<th>Body</th>
-<th>Created At</th>
-</tr>
-</thead>
-<tbody>
-{% for topic in topics %}
-<tr>
-<td>{{topic.title}}</td>
-<td>{{topic.body}}</td>
-<td>{{topic.createdAt | date("H:i A | D ")}}</td>
-</tr>
+		}
+		.forum-wrapper .card {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+        .forum-wrapper .card .card-header
+        {
+            background-color: #AA00FF;
+            color: white;
+            font-weight: bold;
+        }
+        .widget
+        {
+           
+        }
+	</style>
+	<div class="container">
+		<div class="row">
+			<div class="col-8 forum-wrapper">
 
-{% endfor %}
-<tbody>
-</table>
-</div>
+				<div class="card">
+					<div class="card-header">
+						Section 1
+					</div>
+					<div class="card-body">
+						<div class="category-forum">
+							<div class="category-icon">category-icon</div>
+							<div class="category-info">category-info</div>
+							<div class="category-latest">Lastest post</div>
+						</div>
+						<div class="category-forum">
+							<div>category-icon</div>
+							<div>category-info</div>
+							<div>Lastest post</div>
+						</div>
+						<div class="category-forum">
+							<div>category-icon</div>
+							<div>category-info</div>
+							<div>Lastest post</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header">
+						Section 2
+					</div>
+					<div class="card-body">
+						<div class="category-forum">
+							<div class="category-icon">category-icon</div>
+							<div class="category-info">category-info</div>
+							<div class="category-latest">Lastest post</div>
+						</div>
+						<div class="category-forum">
+							<div>category-icon</div>
+							<div>category-info</div>
+							<div>Lastest post</div>
+						</div>
+						<div class="category-forum">
+							<div>category-icon</div>
+							<div>category-info</div>
+							<div>Lastest post</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="col-4">
+
+
+				<div class="row justify-content-end">
+					<div class="widget">
+						<div class="card">
+							<div class="card-body">
+								<h4 class="card-title">Latest member</h4>
+								<p class="card-text">Text</p>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div class="row justify-content-end">
+					<div class="widget">
+						<div class="card">
+							<div class="card-body">
+								<h4 class="card-title">Number of threads</h4>
+								<p class="card-text">1567</p>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
 {% endblock %}
