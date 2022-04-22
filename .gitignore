@@ -9,4 +9,5 @@
 /vendor/
 /.env
 ###< symfony/framework-bundle ###
+/symfony.exe
 migrations/
