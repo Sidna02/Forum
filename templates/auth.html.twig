@@ -1,78 +1,95 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
-{% for error in app.flashes('registration_error') %}
-    {{error}}
-{% endfor %}
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <title>Sign in/up</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
-{#        <link rel="shortcut icon" type="image/x-icon" href=./images/Carpour.png />#}
-        <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800&display=swap" rel="stylesheet">
-    </head>
-    <body>
+	{% for flash_error in app.flashes('verify_email_error') %}
+		<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+	{% endfor %}
+	{% for error in app.flashes('registration_error') %}
+		{{error}}
+	{% endfor %}
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<title>Sign in/up</title>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<link
+			rel="stylesheet" type="text/css" href="/assets/css/style.css">
+			{#        <link rel="shortcut icon" type="image/x-icon" href=./images/Carpour.png />#}
+			<link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800&display=swap" rel="stylesheet">
+		</head>
+		<body>
 
-    <!-- Sign In/Up-->
-    <div class="cont">
-        <div class="form sign-in">
-            <h2>Sign In</h2>
-            <label>
-                <span>Email Address</span>
-                <input type="email" name="email">
-            </label>
-            <label>
-                <span>Password</span>
-                <input type="password" name="password">
-            </label>
-            <button class="submit" type="button">Sign In</button>
-            <p class="forgot-pass"><a href="{{path('app_forgot_password_request')}}">Forgot Password ?</a></p>
+			<!-- Sign In/Up-->
+			<div class="cont">
+				<div class="form sign-in">
+					<form method="post">
 
-        </div>
+						{% if error is not null %}
+							<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+						{% endif %}
 
-        <div class="sub-cont">
-            <div class="img">
-                <div class="img-text m-up">
-                    <h2>New here?</h2>
-                    <p>Sign up and discover great amount of new opportunities!</p>
-                </div>
-                <div class="img-text m-in">
-                    <h2>One of us?</h2>
-                    <p>If you already has an account, just sign in. We've missed you!</p>
-                </div>
-                <div class="img-btn">
-                    <span class="m-up">Sign Up</span>
-                    <span class="m-in">Sign In</span>
-                </div>
-            </div>
-            <div class="form sign-up">
-                <h2>Sign Up</h2>
-                <label class="field">
-                    <input placeholder="Username">
-                </label>
-                <label class="field">
-                    <input placeholder="Email">
-                </label>
-                <label class="error-text"></label>
-                <label class="field">
-                    <input onkeyup="active()" id="pswrd_1" type="password" placeholder="Enter Password">
-                </label>
-                <label class="field">
-                    <input onkeyup="active_2()" id="pswrd_2" disabled type="password" placeholder="Confirm Password">
-                    <label class="show">SHOW</label>
-                </label>
-                <button type="button" class="submit" href="#">Sign Up Now</button>
-            </div>
-        </div>
-        <!-- End Sign In/Up-->
-        <script type="text/javascript" src="/assets/javascript/script.js"></script>
-    </div>
-    </body>
-    </html>
+						{% if app.user %}
+							<div class="mb-3">
+								You are logged in as
+								{{ app.user.username }},
+								<a href="{{ path('app_logout') }}">Logout</a>
+							</div>
+						{% endif %}
+
+						<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+						<label for="inputUsername">
+							<span>Username</span>
+						</label>
+						<input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>
+						<label for="inputPassword">
+							<span>Password</span>
+						</label>
+						<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+
+						<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+
+						<button class="submit" type="submit" name="login">Sign in</button>
+						<p class="forgot-pass">
+							<a href="{{path('app_forgot_password_request')}}">Forgot Password ?</a>
+						</p>
+					</form>
+				</div>
+
+				<div class="sub-cont">
+					<div class="img">
+						<div class="img-text m-up">
+							<h2>New here?</h2>
+							<p>Sign up and discover great amount of new opportunities!</p>
+						</div>
+						<div class="img-text m-in">
+							<h2>One of us?</h2>
+							<p>If you already has an account, just sign in. We've missed you!</p>
+						</div>
+						<div class="img-btn">
+							<span class="m-up">Sign Up</span>
+							<span class="m-in">Sign In</span>
+						</div>
+					</div>
+					<div class="form sign-up">
+						{{ form_start(registrationForm) }}
+						{{form_row(registrationForm.email)}}
+						{{ form_row(registrationForm.username) }}
+						{{ form_row(registrationForm.plainPassword, {
+            label: 'Password'
+        }) }}
+						{{form_row(registrationForm.birthdate)}}
+						{{ form_row(registrationForm.agreeTerms) }}
+						<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+						{{form_row(registrationForm.register)}}
+						{{ form_end(registrationForm) }}
+
+					</div>
+				</div>
+				<!-- End Sign In/Up-->
+				<script type="text/javascript" src="/assets/javascript/script.js"></script>
+			</div>
+		</body>
+	</html>
 {% endblock %}

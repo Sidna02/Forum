@@ -1,0 +1,13 @@
+    #login-wrapper {
+        width: 40%;
+        padding-top: 1rem;
+    }
+    
+    #login-img-container {
+        margin: auto;
+    }
+    
+    #login-img {
+        width: 80px;
+        height: 80px;
+    }

@@ -4,8 +4,10 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Query;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -90,4 +92,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     */
+    public function findLatestMember(): User
+    {
+        $result = $this->_em->createQuery("SELECT u FROM App:User u ORDER BY u.registeredAt DESC")
+            ->setMaxResults(1)
+            ->getResult();
+        if (empty($result)) {
+            return null;
+        }
+        return $result[0];
+    }
+    public function countBirthDatesByYear()
+    {
+        $emConfig = $this->_em->getConfiguration();
+        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
+        $rsm = new ResultSetMapping();
+        $query = $this->_em->createQuery('SELECT YEAR(u.birthdate) y, count(u) c  FROM App:User u WHERE u.birthdate is NOT NULL GROUP BY y ORDER BY y ASC');
+        return $users = $query->getResult();
+    }
+    public function countRegistrationsByDay()
+    {
+        $rsm = new ResultSetMapping();
+        $query = $this->_em->createQuery("SELECT DATE_FORMAT(u.registeredAt, '%Y-%m-%d') date, count(u) c from App:User u WHERE u.registeredAt is NOT NULL GROUP BY date  ");
+        return $query->getResult();
+    }
 }

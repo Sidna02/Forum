@@ -21,7 +21,10 @@ class TopicCreateType extends AbstractType
             ->add('body', CKEditorType::class, [
         
             ])
-            ->add('create', SubmitType::class)
+            ->add('create', SubmitType::class, ['attr' => 
+            
+            ['class' => 'thread-btn']
+            ])
 
         ;
     }

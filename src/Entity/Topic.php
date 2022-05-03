@@ -3,11 +3,16 @@
 namespace App\Entity;
 
 use App\Repository\TopicRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
+
 
 #[ORM\Entity(repositoryClass: TopicRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+
 class Topic
 {
     #[ORM\Id]
@@ -34,11 +39,22 @@ class Topic
 
     #[ORM\OneToMany(mappedBy: 'topic', targetEntity: Comment::class)]
     private $comments;
-    public function __construct(User $user)
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $lastEditedAt;
+
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
+    private $lastEditedBy;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $isLocked;
+
+    public function __construct(User $user, Category $category)
     {
         $this->creator = $user;
         $this->comments = new ArrayCollection();
-        
+        $this->category = $category;
+        $this->isLocked = false;
     }
 
     public function getId(): ?int
@@ -134,5 +150,58 @@ class Topic
         }
 
         return $this;
+    }
+    public function getLastEditedAt(): ?\DateTimeImmutable
+    {
+        return $this->lastEditedAt;
+    }
+
+    public function setLastEditedAt(?\DateTimeImmutable $lastEditedAt): self
+    {
+        $this->lastEditedAt = $lastEditedAt;
+
+        return $this;
+    }
+
+    public function getLastEditedBy(): ?User
+    {
+        return $this->lastEditedBy;
+    }
+
+    public function setLastEditedBy(?User $lastEditedBy): self
+    {
+        $this->lastEditedBy = $lastEditedBy;
+
+        return $this;
+    }
+
+    public function getIsLocked(): ?bool
+    {
+        return $this->isLocked;
+    }
+
+    public function setIsLocked(?bool $isLocked): self
+    {
+        $this->isLocked = $isLocked;
+
+        return $this;
+    }
+    #[ORM\PrePersist]
+    public function updateCreatedAt()
+    {
+        $this->createdAt = new DateTimeImmutable();
+        
+    }
+    #[ORM\PreUpdate]
+    public function updateEditedAt()
+    {
+    $this->lastEditedAt = new DateTimeImmutable();
+    }
+
+
+
+    public function getType()
+    {
+        return "topic";
     }
 }

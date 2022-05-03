@@ -1,25 +1,58 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register
+{% endblock %}
+{% form_theme registrationForm 'bootstrap_5_layout.html.twig' %}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
-{% for error in app.flashes('registration_error') %}
-    {{error}}
-{% endfor %} %}
-    <h1>Register</h1>
+	{% for flash_error in app.flashes('verify_email_error') %}
+		<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+	{% endfor %}
+	{% for error in app.flashes('registration_error') %}
+		{{error}}
+	{% endfor %}
+	<div class="container">
+		<div class="card m-auto w-50" ;>
+			<div class="card-body">
+				{{ form_start(registrationForm) }}
+				<div class="row g-3">
+					<div class="col">{{ form_row(registrationForm.email) }}</div>
+					<div class="col">{{ form_row(registrationForm.username) }}</div>
+				</div>
 
-    {{ form_start(registrationForm) }}
-        {{form_row(registrationForm.email)}}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{form_row(registrationForm.birthdate)}}
-        {{ form_row(registrationForm.agreeTerms) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
-{% endblock %}
+				<div class="row g-3">
+
+					<div class="col">
+						{{ form_row(registrationForm.plainPassword.first, {
+                
+					'attr': {'placeholder': 'Enter password'}
+                }) }}
+					</div>
+					<div class="col">
+						{{ form_row(registrationForm.plainPassword.second, {
+             
+					'attr': {'placeholder': 'Confirm Password'}
+                }) }}
+					</div>
+
+
+				</div>
+				<div class="row g-3">
+					{{ form_row(registrationForm.birthdate) }}
+				</div<divclass="row g-3">
+				<div class="col">{{ form_row(registrationForm.agreeTerms) }}</div>
+
+				<div class="col">{{ form_row(registrationForm.register) }}</div>
+			</div>
+
+
+			{{ form_end(registrationForm) }}
+			<p class="block text-center">If you already have an account, you can
+				<a href="{{ path('app_login') }}">sign in here</a>
+			</p>
+		</div>
+	</div>
+</div>
+
+{% embed 'footer.html.twig' %}{% endembed %}{% endblock %}

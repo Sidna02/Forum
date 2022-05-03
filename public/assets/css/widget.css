@@ -1,0 +1,17 @@
+.widget .card .card-header {
+    background-color: darkslateblue;
+    color: white;
+    font-weight: bold;
+}
+
+.widget:first-of-type {
+    margin-top: 4%;
+    margin-bottom: 5%;
+}
+
+.widget {
+    margin: auto;
+    height: auto;
+    width: 100%;
+    margin-right: 5px;
+}

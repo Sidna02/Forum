@@ -3,74 +3,67 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Entity\User;
-use App\Form\UserType;
-use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use RolesField;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
-#[Route('/admin/crud/user')]
-class UserCrudController extends AbstractController
+class UserCrudController extends AbstractCrudController
 {
-    #[Route('/', name: 'app_user_crud_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    private UserPasswordHasherInterface $passwordHasherInterface;
+    public function __construct(UserPasswordHasherInterface $passwordHasherInterface)
     {
-        return $this->render('user_crud/index.html.twig', [
-            'users' => $userRepository->findAll(),
-        ]);
+        $this->passwordHasherInterface = $passwordHasherInterface;
+    }
+    public static function getEntityFqcn(): string
+    {
+        return User::class;
     }
 
-    #[Route('/new', name: 'app_user_crud_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository): Response
+
+    public function configureFields(string $pageName): iterable
     {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+        $roles = ['ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_USER'];
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->add($user);
-            return $this->redirectToRoute('app_user_crud_index', [], Response::HTTP_SEE_OTHER);
-        }
+        return [
 
-        return $this->renderForm('user_crud/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
+            EmailField::new('email'),
+            TextField::new('username'),
+            TextField::new('password')->onlyWhenCreating(),
+            ChoiceField::new('roles')
+                ->setChoices(array_combine($roles, $roles))
+                ->allowMultipleChoices()
+                ->renderExpanded(),
+            TextField::new('firstName')->setColumns('col-sm-6 col-lg-5 col-xxl-3'),
+            TextField::new('lastName')->setColumns('col-sm-6 col-lg-5 col-xxl-3'),
+            DateField::new('birthdate'),
+            DateTimeField::new('registeredAt'),
+
+
+
+
+        ];
     }
-
-    #[Route('/{id}', name: 'app_user_crud_show', methods: ['GET'])]
-    public function show(User $user): Response
+    /**
+     * @param User $entityInstance
+     */
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        return $this->render('user_crud/show.html.twig', [
-            'user' => $user,
-        ]);
+
+        $entityInstance->setPassword(
+            $this->passwordHasherInterface->hashPassword($entityInstance, $entityInstance->getPassword())
+        );
+
+        parent::persistEntity($entityManager, $entityInstance);
     }
-
-    #[Route('/{id}/edit', name: 'app_user_crud_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository): Response
-    {
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->add($user);
-            return $this->redirectToRoute('app_user_crud_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('user_crud/edit.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_user_crud_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, UserRepository $userRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-            $userRepository->remove($user);
-        }
-
-        return $this->redirectToRoute('app_user_crud_index', [], Response::HTTP_SEE_OTHER);
-    }
+ 
 }

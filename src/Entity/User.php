@@ -3,51 +3,62 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\DateImmutableType;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private $username;
+    private string $username;
 
     #[ORM\Column(type: 'json')]
-    private $roles = [];
+    private array $roles = [];
 
     #[ORM\Column(type: 'string')]
-    private $password;
+    private string $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $email;
+    private string $email;
 
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private bool $isVerified = false;
 
     #[ORM\Column(type: 'string', length: 35, nullable: true)]
-    private $first_name;
+    private string $first_name;
 
     #[ORM\Column(type: 'string', length: 35, nullable: true)]
-    private $last_name;
+    private string $last_name;
 
     #[ORM\Column(type: 'date', nullable: true)]
     private $birthdate;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $about;
+    private string $about;
 
     #[ORM\OneToMany(mappedBy: 'creator', targetEntity: Topic::class)]
-    private $topics;
+    private Collection $topics;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $registeredAt;
 
     public function __construct()
     {
@@ -89,7 +100,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
+        if(isset($roles['Roles']))
+        {
+            $roles[]=$roles['Roles'][0];
+            unset($roles['Roles']);
+        }
         return array_unique($roles);
     }
 
@@ -224,5 +239,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getRegisteredAt(): ?\DateTimeImmutable
+    {
+        return $this->registeredAt;
+    }
+
+    public function setRegisteredAt(?\DateTimeImmutable $registeredAt): self
+    {
+        $this->registeredAt = $registeredAt;
+
+        return $this;
+    }
+    #[ORM\PrePersist]
+    public function setRegistrationDate()
+    {
+        $this->registeredAt = new DateTimeImmutable();
+
     }
 }

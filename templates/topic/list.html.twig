@@ -4,112 +4,97 @@
 {% endblock %}
 
 {% block body %}
-	<style>
-		.category-forum {
-			display: flex;
-			justify-content: space-between;
-		}
-		.widget {
-			margin-bottom: 10px;
-			margin-top: 10px;
-			height: auto;
-			width: 50%;
-
-		}
-		.forum-wrapper .card {
-			margin-top: 10px;
-			margin-bottom: 10px;
-		}
-        .forum-wrapper .card .card-header
-        {
-            background-color: #AA00FF;
-            color: white;
-            font-weight: bold;
-        }
-        .widget
-        {
-           
-        }
-	</style>
 	<div class="container">
 		<div class="row">
-			<div class="col-8 forum-wrapper">
-
-				<div class="card">
-					<div class="card-header">
-						Section 1
-					</div>
-					<div class="card-body">
-						<div class="category-forum">
-							<div class="category-icon">category-icon</div>
-							<div class="category-info">category-info</div>
-							<div class="category-latest">Lastest post</div>
-						</div>
-						<div class="category-forum">
-							<div>category-icon</div>
-							<div>category-info</div>
-							<div>Lastest post</div>
-						</div>
-						<div class="category-forum">
-							<div>category-icon</div>
-							<div>category-info</div>
-							<div>Lastest post</div>
-						</div>
-
+			<div class="col-md-8 col-6 forum-wrapper ">
+				<div class="action">
+					<ul class="page-numbers">
+						<li>1</li>
+						<li>2</li>
+					</ul>
+					<div class="thread-btn">
+						<a href="{{path('app_topic_create', {id: id})}}">Create a new topic</a>
 					</div>
 				</div>
-				<div class="card">
-					<div class="card-header">
-						Section 2
+				<div class="card section-wrapper ">
+					<div class="card-header ">
+						Topics
 					</div>
-					<div class="card-body">
-						<div class="category-forum">
-							<div class="category-icon">category-icon</div>
-							<div class="category-info">category-info</div>
-							<div class="category-latest">Lastest post</div>
-						</div>
-						<div class="category-forum">
-							<div>category-icon</div>
-							<div>category-info</div>
-							<div>Lastest post</div>
-						</div>
-						<div class="category-forum">
-							<div>category-icon</div>
-							<div>category-info</div>
-							<div>Lastest post</div>
-						</div>
+					<div class="card-body ">
+						{% for topic in topics %}
+							<div class="topic-wrapper ">
 
+								<div class="topic-info">
+									<div class="topic-name">
+										<i class="fa fa-lock"></i>
+										<a href="{{path('app_topic_view', {id:topic.id})}}">
+											{{topic.title}}</a>
+									</div>
+									<div class="topic-details ">UserName at
+										{{topic.createdAt | format_datetime(locale='en')}}</div>
+								</div>
+								<div class="topic-details ">
+									<div class="topic-scope ">
+										<div class="stats-line ">
+											<span class="stats-header ">Views</span>
+											<span class="stats-info ">9</span>
+										</div>
+										<div class="stats-line ">
+											<span class="stats-header ">Posts</span>
+											<span class="stats-info ">9</span>
+										</div>
+									</div>
+									<div class="topic-last ">
+										User Name Date
+									</div>
+									<div class="user-post-img ">
+										<img class="rounded-circle " src="https://picsum.photos/200 " width="50px " height="50px "/>
+									</div>
+								</div>
+
+
+							</div>
+						{% endfor %}
 					</div>
+
 				</div>
+
 			</div>
-			<div class="col-4">
+			<div class="col-md-4 col-sm-6 ">
 
 
-				<div class="row justify-content-end">
-					<div class="widget">
-						<div class="card">
-							<div class="card-body">
-								<h4 class="card-title">Latest member</h4>
-								<p class="card-text">Text</p>
-							</div>
-
+				<div class="widget ">
+					<div class="card ">
+						<div class="card-header ">
+							Random
 						</div>
+						<div class="card-body ">
+							<p class="card-text ">Text</p>
+						</div>
+
 					</div>
 				</div>
-				<div class="row justify-content-end">
-					<div class="widget">
-						<div class="card">
-							<div class="card-body">
-								<h4 class="card-title">Number of threads</h4>
-								<p class="card-text">1567</p>
-							</div>
 
+
+				<div class="widget">
+					<div class="card ">
+						<div class="card-header ">
+							Statistiques
 						</div>
+						<div class="card-body ">
+
+							<div class="stats-line ">
+								<span class="stats-header ">Type stats</span>
+								<span class="stats-info ">Count</span>
+							</div>
+						</div>
+
 					</div>
+
 				</div>
 			</div>
 		</div>
 
 	</div>
-
+	{% embed 'footer.html.twig' %}{% endembed %}
 {% endblock %}
