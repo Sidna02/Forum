@@ -33,7 +33,9 @@ class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         try {
-
+            if ($this->getUser()) {
+                return $this->redirectToRoute('app_home');
+            }
             $user = new User();
             $form = $this->createForm(RegistrationFormType::class, $user);
             $form->handleRequest($request);
@@ -58,26 +60,26 @@ class RegistrationController extends AbstractController
                         ->htmlTemplate('registration/confirmation_email.html.twig')
                 );
 
-                // do anything else you need here, like send an email
-
                 return $this->redirectToRoute('app_home');
             }
 
-            return $this->render('auth.html.twig', [
+            return $this->render('registration/register.html.twig', [
                 'registrationForm' => $form->createView(),
             ]);
         }
+        catch(Exception $e)
+        {   
+            // Logging protocol example
+            // Logs messages in a file in app/var/log
+            $this->logger->error($e->getMessage());
+            $entityManager =
+            $this->addflash('registration_error', "An error has occured while you were trying to register. Please try again later.");
+            throw $e;
+            return new Response("An error has occured while you were trying to register. Please try again later.");
+    
+        }
  
-    catch(Exception $e)
-    {   
-        // Logging protocol example
-        // Logs messages in a file in app/var/log
-        $this->logger->error($e->getMessage());
-        $entityManager =
-        $this->addflash('registration_error', "An error has occured while you were trying to register. Please try again later.");
-        return $this->redirectToRoute('app_register');
 
-    }
 }
 
     #[Route('/verify/email', name: 'app_verify_email')]

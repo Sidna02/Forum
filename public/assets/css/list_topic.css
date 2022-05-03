@@ -1,0 +1,53 @@
+.topic-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.topic-details {
+    display: flex;
+}
+
+.topic-scope {
+    width: 55%;
+    padding-right: 8%;
+}
+
+.topic-last {
+    padding-right: 2%;
+}
+
+.page-numbers {
+    display: flex;
+    justify-content: flex-start;
+    list-style: none;
+}
+
+.page-numbers li {
+    margin-right: 4%;
+    width: 25px;
+    border-radius: 2px;
+    background-color: darkslateblue;
+    text-align: center;
+    color: white;
+}
+
+.action {
+    display: flex;
+    justify-content: space-between;
+}
+
+.thread-btn {
+    padding: 0.5rem;
+    border-radius: 2px;
+    background-color: darkslateblue;
+}
+
+.thread-btn a:hover {
+    text-decoration: none;
+    color: white;
+}
+
+.thread-btn a {
+    text-decoration: none;
+    color: white;
+}

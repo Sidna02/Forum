@@ -1,0 +1,37 @@
+.post {
+    display: grid;
+    border: 1px solid black;
+    grid-template-columns: 10rem auto;
+}
+
+.post-creator {
+    margin: auto;
+    height: 100%;
+    margin-top: 0;
+    padding-top: 1rem;
+}
+
+.post-content {
+    padding: 1em;
+}
+
+.creator-picture {
+    display: block;
+    width: 90px;
+    height: 90px;
+}
+
+.creator-name {
+    font-weight: bold;
+}
+
+.author-signature {
+    border-top: 1px solid black;
+    padding: 1em;
+}
+
+@media only screen and (max-width: 650px) {
+    .post {
+        grid-template-columns: none;
+    }
+}

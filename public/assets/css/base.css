@@ -1,3 +1,14 @@
 body {
-    background-color: #212529;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: #e9f0f5;
+}
+
+.container {
+    background-color: white;
+    height: 100vh;
+    padding-top: 1%;
+}
+
+.bold {
+    font-weight: bold;
 }

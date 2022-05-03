@@ -4,50 +4,121 @@
 {% endblock %}
 
 {% block body %}
-	<style>
-		.example-wrapper {
-			margin: 1em auto;
-			max-width: 800px;
-			width: 95%;
-			font: 18px / 1.5 sans-serif;
-		}
-		.example-wrapper code {
-			background: #F5F5F5;
-			padding: 2px 6px;
-		}
-        .forum-wrapper{
-            display:flex;
-            flex-direction: column;
-            background-color: gray;
-        }
-        .container{
-            width: 75vw;
-            margin: auto;
-            height: 100vh;
-        }
-        .category
-        {
-            background-color: lightgray;
-        }
 
-	</style>
 
 	<div class="container">
 		{% for message in app.flashes('success') %}
 			<div class="alert alert-success">{{message}}</div>
 		{% endfor %}
 
-		
-			<div class="forum-wrapper">
-            {% for forum in forums %}
-				{{forum}}
-				{% for category in forum.categories %}
-					<div class="category"><a href={{path('app_topic_list', {id: category.id})}}>{{category}}</a></div>
-                {% endfor %}
-            {% endfor %}
-			</div>
-			
 
-		
-    </div>
-	{% endblock %}
+		<div class="container">
+
+			<div class="row ">
+
+
+				<div class="col-8 forum-wrapper ">
+					{% for forum in forums %}
+						<div class="card section-wrapper ">
+							<div class="card-header ">
+
+								{{forum.title}}
+							</div>
+							<div class="card-body ">
+								{% for category in forum.categories %}
+									<div class="category-wrapper ">
+										<div class="category-icon-info ">
+											<div class="category-icon ">
+												<i class="fa fa-comment fa-4x "></i>
+											</div>
+											<div class="category-name-stats ">
+												<div class="category-name ">
+													<a href="{{path('app_topic_list', {id: category.id})}}">{{category.title}}</a>
+												</div>
+												<div class="category-stats ">
+													<p>Topics
+														<span class="bold">{{category.topics | length}}</span>
+														- Threads
+														<span class="bold">5</span>
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="category-latest-post ">
+											<div class="user-image "><img class="rounded-circle " src="https://picsum.photos/200 "/></div>
+											<div class="latest-post-info ">
+												{% if array[category.id] is null %}
+													<div class="post-title ">Empty</div>
+													<div class="name-date">
+														<span class="user-name">Empty
+														</span>
+														<span class="time">Empty</span>
+													</div>
+												{% elseif array[category.id].getType() == "comment" %}
+													<div class="post-title ">{{array[category.id].topic.title}}</div>
+													<div class="name-date">
+														<span class="user-name">{{array[category.id].author.username}}
+														</span>
+														<span class="time">{{array[category.id].createdAt | format_datetime(locale="en")}}</span>
+													</div>
+												{% else %}
+													<div class="post-title ">{{array[category.id].title}}</div>
+													<div class="name-date">
+														<span class="user-name">{{array[category.id].creator.username}}
+														</span>
+														<span class="time">{{array[category.id].createdAt | format_datetime(locale="en")}}</span>
+													</div>
+
+												{% endif %}
+
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+				<div class="col-4 ">
+
+					<div class="row justify-content-end ">
+						<div class="widget ">
+							<div class="card ">
+								<div class="card-header ">
+									Random
+								</div>
+								<div class="card-body ">
+									<p class="card-text ">Text</p>
+								</div>
+
+							</div>
+						</div>
+					</div>
+					<div class="row justify-content-end ">
+						<div class="widget">
+							<div class="card">
+								<div class="card-header">
+									Statistiques
+								</div>
+								<div class="card-body ">
+
+									<div class="stats-line ">
+										<span class="stats-header ">Type stats</span>
+										<span class="stats-info ">Count</span>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+	</div>
+	{% embed 'footer.html.twig' %}
+	{% endembed %}
+{% endblock %}

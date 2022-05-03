@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TopicController!
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+
+		<article class="post">
+			<div class="post-creator">
+				<span class="creator-name">{{topic.creator.username}}</span>
+				<img class="creator-picture rounded-circle" src="https://picsum.photos/200"/>
+				<span class="creator-role">Role Name</span>
+			</div>
+			<div class="post-wrapper">
+				<div class="post-content ">
+					{{topic.body | raw}}
+				</div>
+				<div class="author-signature">
+					Signature
+				</div>
+			</div>
+			{% for comment in topic.comments %}
+			</article>
+			<article class="post">
+				<div class="post-creator">
+					<span class="creator-name">{{comment.author.username}}</span>
+					<img class="creator-picture rounded-circle" src="https://picsum.photos/200"/>
+					<span class="creator-role">Role Name</span>
+				</div>
+				<div class="post-wrapper">
+					<div class="post-content ">
+						{{comment.body | raw}}
+					</div>
+					<div class="author-signature">
+						Signature
+					</div>
+					
+				</div>
+
+			</article>
+		{% endfor %}
+<a href="{{path('app_post_create', {id: topic.id})}}"><button>Create a comment</button></a>
+	</div>
+	{% embed 'footer.html.twig' %}{% endembed %}
+{% endblock %}

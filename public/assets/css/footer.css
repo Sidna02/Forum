@@ -1,0 +1,43 @@
+footer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #e9f0f5;
+    bottom: 0;
+    position: fixed;
+}
+
+.footer-tabs {
+    display: flex;
+    justify-content: space-around;
+    padding: 1em;
+}
+
+.footer-tab {
+    white-space: nowrap;
+    margin-right: 10%;
+    border-radius: 3px;
+    color: white;
+    background-color: #4f78a4;
+    padding: 2%;
+}
+
+.footer-tab a {
+    text-decoration: none;
+    color: white;
+}
+
+.footer-tab a:hover {
+    text-decoration: none;
+    color: white;
+}
+
+.footer-copyright {
+    text-align: center;
+    font-weight: bold;
+    padding: 1em;
+}
+
+.footer-important {
+    display: flex;
+}
