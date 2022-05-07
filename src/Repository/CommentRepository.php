@@ -74,5 +74,19 @@ class CommentRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getCommentsOrderedByActivity(int $topic)
 
+    {
+
+        $querybuilder = $this->_em->createQueryBuilder()
+        ->select(['c'])
+        ->from('App:Comment', 'c')
+        ->orderBy('c.createdAt', 'ASC')
+        ->where('c.topic =:topic')
+        ->setParameter('topic', $topic);
+
+
+
+        return $querybuilder;
+    }
 }

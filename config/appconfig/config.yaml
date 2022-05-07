@@ -1,0 +1,4 @@
+parameters:
+    pagination:
+        app.topic.pages: 4
+        app.comment.pages: 2

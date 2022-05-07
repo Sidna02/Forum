@@ -7,13 +7,13 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-8 col-6 forum-wrapper ">
-				<div class="action">
-					<ul class="page-numbers">
-						<li>1</li>
-						<li>2</li>
-					</ul>
-					<div class="thread-btn">
-						<a href="{{path('app_topic_create', {id: id})}}">Create a new topic</a>
+
+				<div class="action row">
+					<div class="col">{{ pagerfanta(topics) }}</div>
+					<div class="col">
+						<div class="thread-btn ">
+							<a href="{{path('app_topic_create', {id: id})}}">Create a new topic</a>
+						</div>
 					</div>
 				</div>
 				<div class="card section-wrapper ">
@@ -30,7 +30,8 @@
 										<a href="{{path('app_topic_view', {id:topic.id})}}">
 											{{topic.title}}</a>
 									</div>
-									<div class="topic-details ">UserName at
+									<div class="topic-details ">{{topic.creator.username}}
+										at
 										{{topic.createdAt | format_datetime(locale='en')}}</div>
 								</div>
 								<div class="topic-details ">

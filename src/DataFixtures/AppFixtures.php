@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
+use App\Entity\Forum;
 use App\Entity\Topic;
 use App\Entity\User;
 use DateTime;
@@ -56,7 +58,7 @@ class AppFixtures extends Fixture
         );
         for ($i = 0; $i < 100; $i++) {
             $user = new User();
-                $user
+            $user
                 ->setEmail(mt_rand(12348979, 8971234456) . '@lemarocazzeza.ma')
                 ->setUsername('user' . mt_rand(1045, 8764546))
                 ->setIsVerified(0)
@@ -64,8 +66,7 @@ class AppFixtures extends Fixture
                     new DateTime(mt_rand(1920, 2004) . '-' . mt_rand(1, 11) . '-' . mt_rand(1, 11))
 
                 )
-                ->setPassword($this->hasher->hashPassword($user, 'dummyuser'))
-                ;
+                ->setPassword($this->hasher->hashPassword($user, 'dummyuser'));
             $manager->persist($user);
             $user->setRegisteredAt(
                 new DateTimeImmutable(mt_rand(2019, 2022) . '-' . mt_rand(4, 6) . '-' . mt_rand(8, 12))
@@ -73,8 +74,15 @@ class AppFixtures extends Fixture
             );
         }
 
-        
 
+        $announcement = (new Forum())->setTitle('Announcements');
+        $announcement->addCategory((new Category())->setTitle('News'))
+            ->addCategory((new Category())->setTitle('Updates'));;
+        $complaints = (new Forum())->setTitle('Complaints');
+        $complaints->addCategory((new Category())->setTitle('Staff Complaints'))
+            ->addCategory((new Category())->setTitle('Member Reports'));
+        $manager->persist($announcement);
+        $manager->persist($complaints);
         $manager->flush();
     }
 }

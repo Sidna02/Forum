@@ -49,6 +49,9 @@ class Topic
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $isLocked;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $lastActivity;
+
     public function __construct(User $user, Category $category)
     {
         $this->creator = $user;
@@ -203,5 +206,17 @@ class Topic
     public function getType()
     {
         return "topic";
+    }
+
+    public function getLastActivity(): ?\DateTimeInterface
+    {
+        return $this->lastActivity;
+    }
+
+    public function setLastActivity(?\DateTimeInterface $lastActivity): self
+    {
+        $this->lastActivity = $lastActivity;
+
+        return $this;
     }
 }

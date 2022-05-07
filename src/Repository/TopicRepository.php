@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -78,22 +79,36 @@ class TopicRepository extends ServiceEntityRepository
 
     public function getLastCommentByCategory(Category $cat)
     {
-        $res= $this->_em->createQuery("SELECT co from App:Category c INNER JOIN App:Topic ti WITH ti.category = ?1 INNER JOIN App:Comment co WITH ti.id=co.topic ORDER BY co.createdAt DESC")
-        ->setParameter(1, $cat->getId())
-        ->setMaxResults(1)
-        ->getOneOrNullResult();
-        if($res == null)
-        {
+        $res = $this->_em->createQuery("SELECT co from App:Category c INNER JOIN App:Topic ti WITH ti.category = ?1 INNER JOIN App:Comment co WITH ti.id=co.topic ORDER BY co.createdAt DESC")
+            ->setParameter(1, $cat->getId())
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+        if ($res == null) {
             return $this->getLastTopicByCategory($cat);
         }
         return $res;
     }
     public function getLastTopicByCategory(Category $cat)
     {
-        $res= $this->_em->createQuery("SELECT ti from App:Category c INNER JOIN App:Topic ti WITH ti.category = ?1 ORDER BY ti.createdAt DESC")
-        ->setParameter(1, $cat->getId())
-        ->setMaxResults(1)
-        ->getOneOrNullResult();
+        $res = $this->_em->createQuery("SELECT ti from App:Category c INNER JOIN App:Topic ti WITH ti.category = ?1 ORDER BY ti.createdAt DESC")
+            ->setParameter(1, $cat->getId())
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
         return $res;
+    }
+    public function getTopicsOrderedByActivity(int $cat)
+
+    {
+
+        $querybuilder = $this->_em->createQueryBuilder()
+        ->select(['t'])
+        ->from('App:Topic', 't')
+        ->orderBy('t.lastActivity', 'DESC')
+        ->where('t.category =:cat')
+        ->setParameter('cat', $cat);
+
+
+
+        return $querybuilder;
     }
 }

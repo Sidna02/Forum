@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\CommentRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Comment
 {
     #[ORM\Id]
@@ -90,4 +92,11 @@ class Comment
     {
         return "comment";
     }
+    #[ORM\PrePersist]
+    public function updateLastActivity()
+    {
+        $this->topic->setLastActivity(new DateTimeImmutable());
+    }
+
+    
 }

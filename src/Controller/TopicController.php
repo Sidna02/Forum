@@ -18,13 +18,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
+use Symfony\Config\BabdevPagerfantaConfig;
 
 class TopicController extends AbstractController
 {
     //TODO Pagination
     private EntityManager $em;
     private TopicRepository $topicRepository;
-    private CommentRepository $commentRepoisotry;
+    private CommentRepository $commentRepository;
     private CategoryRepository $categoryRepository;
     public function __construct(
         EntityManagerInterface $em,
@@ -34,7 +37,7 @@ class TopicController extends AbstractController
     ) {
         $this->em = $em;
         $this->topicRepository = $topicRepository;
-        $this->commentRepoisotry = $commentRepository;
+        $this->commentRepository = $commentRepository;
         $this->categoryRepository = $categoryRepository;
     }
     #[Route('/topic/create', name: 'app_topic_create')]
@@ -42,16 +45,16 @@ class TopicController extends AbstractController
     {
 
         $this->denyAccessUnlessGranted("ROLE_USER");
-        $category = $this->categoryRepository->findOneBy(['id'=>$_GET['id']]);
+        $category = $this->categoryRepository->findOneBy(['id' => $_GET['id']]);
         $creator = $this->getUser();
         $topic =  new Topic($creator, $category);
-    
+
         $form = $this->createForm(TopicCreateType::class, $topic);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($topic);
-            
+
             $this->em->flush();
             $this->addFlash("success", "You have successfully created a topic!");
             return $this->redirectToRoute("app_topic_list", ['id' => $_GET['id']]);
@@ -61,24 +64,31 @@ class TopicController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-    #[Route('/category/{id}', name: 'app_topic_list')]
-
-    public function listTopics($id): Response
+    #[Route('/category/{id}', defaults: ['_format' => 'html'], name: 'app_topic_list')]
+    public function listTopics(Request $request, $id, int $page = 1,): Response
     {
-        $topics = $this->topicRepository->findBy(['category' => $id], ['createdAt' => 'DESC']);
-
+        $queryBuilder = $this->topicRepository->getTopicsOrderedByActivity($id);
+        $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
+        $pager->setMaxPerPage($this->getParameter('pagination')['app.comment.pages'])
+            ->setCurrentPage($request->get('page', 1));
         return $this->render('topic/list.html.twig.', [
-            'topics' => $topics,
-            'id'=>$id
+            'topics' => $pager,
+            'id' => $id
         ]);
     }
     #[Route('/topic/view/{id}', name: 'app_topic_view')]
 
-    public function viewTopic($id): Response
+    public function viewTopic(Request $request, $id, int $page = 1): Response
     {
-        $topic = $this->topicRepository->findOneBy(['id'=>$id]);
+        $topic = $this->topicRepository->findOneBy(['id' => $id]);
+        $queryBuilder = $this->commentRepository->getCommentsOrderedByActivity($id);
+        $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
+        $pager->setMaxPerPage($this->getParameter('pagination')['app.comment.pages'])->setCurrentPage($request->get('page', 1));
+        dump($this->getParameter('pagination'));
+        dump($pager);
 
         return $this->render('topic/view_topic.html.twig.', [
+            'comments' => $pager,
             'topic' => $topic
         ]);
     }
@@ -88,7 +98,7 @@ class TopicController extends AbstractController
     public function postCreate(Request $request, $id): Response
     {
         $this->denyAccessUnlessGranted("ROLE_USER");
-        $topic = $this->topicRepository->findOneBy(['id'=>$id]);
+        $topic = $this->topicRepository->findOneBy(['id' => $id]);
         $author = $this->getUser();
         $post =  new Comment($author, $topic);
         $form = $this->createForm(PostCreateType::class, $post);
@@ -98,7 +108,7 @@ class TopicController extends AbstractController
             $this->em->persist($post);
             $this->em->flush();
             $this->addFlash("success", "You have successfully created a comment!");
-            return $this->redirect($this->generateUrl('app_topic_view', ['id' => $id]));
+            return $this->redirect($this->generateUrl('app_topic_view', ['id' => $id, 'page' => 1]));
         }
 
         return $this->render('topic/create_comment.html.twig', [
