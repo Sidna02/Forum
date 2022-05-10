@@ -9,6 +9,8 @@ use App\Repository\TopicRepository;
 use App\Entity\Topic;
 use App\Entity\Category;
 use App\Entity\Forum;
+use App\Entity\Image;
+use App\Repository\ImageRepository;
 use ArrayIterator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,47 +25,51 @@ class HomeController extends AbstractController
     private TopicRepository $topicRepository;
     private CommentRepository $commentRepoisotry;
     private CategoryRepository $categoryRepository;
+    private ImageRepository $imageRepository;
     public function __construct(
         EntityManagerInterface $em,
         TopicRepository $topicRepository,
         CategoryRepository $categoryRepository,
         CommentRepository $commentRepository,
-        ForumRepository $forumRepository
+        ForumRepository $forumRepository,
+        ImageRepository $imageRepository
     ) {
         $this->em = $em;
         $this->topicRepository = $topicRepository;
         $this->commentRepoisotry = $commentRepository;
         $this->categoryRepository = $categoryRepository;
         $this->forumRepository = $forumRepository;
-
+        $this->imageRepository = $imageRepository;
     }
     #[Route('/home', name: 'app_home')]
     public function index(): Response
     {
-        $array =[];
-       $forums = $this->forumRepository->findALl();
-       dump($forums);
-       foreach($forums as $forum)
-       {
-         $categories = $forum->getCategories()->getValues();
-        foreach($categories as $category)
-        {
-            $res = $this->topicRepository->getLastCommentByCategory($category);
-            $array[$category->getId()] = $res;
-        }
-  
-       }
-       dump($array);
+        $forums = $this->forumRepository->findAll();
+        $array = $this->fetchAllCategoriesLastComment($forums);
+        dump($array);
+        $authors = TopicController::fetchUsersFromComments($array);
+        $authorsPicture = $this->imageRepository->fetchUsersProfileImage($authors);
 
-       
-  
 
-        
 
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
             'forums' => $forums,
             'array' => $array,
-               ]);
+            'authorsPicture' => $authorsPicture,
+            'defaultImage' => new Image(IMAGE::DEFAULT)
+        ]);
+    }
+    public function fetchAllCategoriesLastComment($forums): array
+    {
+        $array = [];
+        foreach ($forums as $forum) {
+            $categories = $forum->getCategories()->getValues();
+            foreach ($categories as $category) {
+                $res = $this->topicRepository->getLastCommentByCategory($category);
+                $array[$category->getId()] = $res;
+            }
+        }
+        return $array;
     }
 }

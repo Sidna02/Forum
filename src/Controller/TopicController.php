@@ -8,6 +8,7 @@ use App\Form\PostCreateType;
 use App\Form\TopicCreateType;
 use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;
+use App\Repository\ImageRepository;
 use App\Repository\TopicRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -24,21 +25,24 @@ use Symfony\Config\BabdevPagerfantaConfig;
 
 class TopicController extends AbstractController
 {
-    //TODO Pagination
     private EntityManager $em;
     private TopicRepository $topicRepository;
     private CommentRepository $commentRepository;
     private CategoryRepository $categoryRepository;
+    private ImageRepository $imageRepository;
     public function __construct(
         EntityManagerInterface $em,
         TopicRepository $topicRepository,
         CategoryRepository $categoryRepository,
-        CommentRepository $commentRepository
+        CommentRepository $commentRepository,
+        ImageRepository $imageRepository
+
     ) {
         $this->em = $em;
         $this->topicRepository = $topicRepository;
         $this->commentRepository = $commentRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->imageRepository = $imageRepository;
     }
     #[Route('/topic/create', name: 'app_topic_create')]
     public function create(Request $request): Response
@@ -80,15 +84,18 @@ class TopicController extends AbstractController
 
     public function viewTopic(Request $request, $id, int $page = 1): Response
     {
+        
         $topic = $this->topicRepository->findOneBy(['id' => $id]);
         $queryBuilder = $this->commentRepository->getCommentsOrderedByActivity($id);
         $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
         $pager->setMaxPerPage($this->getParameter('pagination')['app.comment.pages'])->setCurrentPage($request->get('page', 1));
-        dump($this->getParameter('pagination'));
-        dump($pager);
 
+        $images = TopicController::fetchUsersFromComments($pager);
+        $images[] = $topic->getCreator();
+        dump($this->imageRepository->fetchUsersProfileImage($images));
         return $this->render('topic/view_topic.html.twig.', [
             'comments' => $pager,
+            'profilepictures'=>$this->imageRepository->fetchUsersProfileImage($images),
             'topic' => $topic
         ]);
     }
@@ -114,5 +121,25 @@ class TopicController extends AbstractController
         return $this->render('topic/create_comment.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+    
+
+    public static function fetchUsersFromComments($comments): array
+    {
+        $authors = [];
+        /***
+         * @var Comment[] $comments
+         * 
+         */
+        foreach($comments as $comment)
+        {
+            if(!empty($comment))
+            {
+                $authors[] = $comment->getAuthor();
+
+            }
+        }
+        return $authors;
+
     }
 }

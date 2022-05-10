@@ -18,7 +18,7 @@ class Forum
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
-    #[ORM\OneToMany(mappedBy: 'forum', targetEntity: Category::class, cascade:["persist"])]
+    #[ORM\OneToMany(mappedBy: 'forum', targetEntity: Category::class, cascade:["persist"], fetch: 'EAGER')]
     private $categories;
 
     public function __construct()

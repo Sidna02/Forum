@@ -5,13 +5,13 @@
 
 {% block body %}
 	<div class="container">
+	{{dump(profilepictures)}}
 		{{ pagerfanta(comments) }}
 		{% if comments.currentpage == 1 %}
 			<article class="post">
 				<div class="post-creator">
 					<span class="creator-name">{{topic.creator.username}}</span>
-					<img class="creator-picture rounded-circle" src="https://picsum.photos/200"/>
-					<span class="creator-role">Role Name</span>
+						<img class="creator-picture rounded-circle" src="{{ vich_uploader_asset(profilepictures[topic.creator.id], 'imageFile') }}"/>					<span class="creator-role">Role Name</span>
 				</div>
 				<div class="post-wrapper">
 					<div class="post-content ">
@@ -28,7 +28,7 @@
 				<article class="post">
 					<div class="post-creator">
 						<span class="creator-name">{{comment.author.username}}</span>
-						<img class="creator-picture rounded-circle" src="https://picsum.photos/200"/>
+						<img class="creator-picture rounded-circle" src="{{ vich_uploader_asset(profilepictures[comment.author.id], 'imageFile') }}"/>
 						<span class="creator-role">Role Name</span>
 					</div>
 					<div class="post-wrapper">
@@ -43,9 +43,11 @@
 
 				</article>
 			{% endfor %}
+			{% if app.user is not null %}
 			<a href="{{path('app_post_create', {id: topic.id})}}">
 				<button>Create a comment</button>
 			</a>
+			{% endif %}
 		</div>
 		{% embed 'footer.html.twig' %}{% endembed %}
 	{% endblock %}

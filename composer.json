@@ -39,7 +39,8 @@
         "symfonycasts/verify-email-bundle": "^1.10",
         "twig/extra-bundle": "*",
         "twig/intl-extra": "^3.3",
-        "twig/twig": "*"
+        "twig/twig": "*",
+        "vich/uploader-bundle": "^1.19"
     },
     "require-dev": {
         "php": "*",
@@ -97,7 +98,7 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": true,
             "require": "*",
             "docker": true
         }

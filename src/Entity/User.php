@@ -20,8 +20,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 #[ORM\HasLifecycleCallbacks]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -59,6 +61,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $registeredAt;
+
+    #[ORM\Column(type: 'integer', nullable: true, name: 'profile_image_id')]
+    private $profileImage;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $signature;
+
+
+
 
     public function __construct()
     {
@@ -258,4 +269,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->registeredAt = new DateTimeImmutable();
 
     }
+
+    public function getProfileImage(): ?int
+    {
+        return $this->profileImage;
+    }
+
+    public function setProfileImage(?Image $profileImage): ?self
+    {
+        $this->profileImage = $profileImage->getId();
+
+        return $this;
+    }
+
+    public function getSignature(): ?string
+    {
+        return $this->signature;
+    }
+
+    public function setSignature(?string $signature): self
+    {
+        $this->signature = $signature;
+
+        return $this;
+    }
+    
+
+
+
 }

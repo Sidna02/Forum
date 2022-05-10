@@ -23,7 +23,7 @@ class Comment
     #[ORM\JoinColumn(nullable: false)]
     private $topic;
 
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
     private $author;
 

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Image;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Query;
@@ -115,5 +116,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $rsm = new ResultSetMapping();
         $query = $this->_em->createQuery("SELECT DATE_FORMAT(u.registeredAt, '%Y-%m-%d') date, count(u) c from App:User u WHERE u.registeredAt is NOT NULL GROUP BY date  ");
         return $query->getResult();
+    }
+    public function fetchUserImage(User $user): ?Image
+    {
+        $query = $this->_em->createQuery("SELECT i FROM App:Image i  Where i.id = ?1")
+            ->setParameter(1, $user->getProfileImage());
+            dump($query->getOneOrNullResult());
+        return $query->getOneOrNullResult();
     }
 }

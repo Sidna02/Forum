@@ -45,9 +45,11 @@
 											</div>
 										</div>
 										<div class="category-latest-post ">
-											<div class="user-image "><img class="rounded-circle " src="https://picsum.photos/200 "/></div>
-											<div class="latest-post-info ">
-												{% if array[category.id] is null %}
+
+											{% if array[category.id] is null %}
+												<div class="user-image "><img class="rounded-circle " src="{{ vich_uploader_asset(defaultImage, 'imageFile') }}"/></div>
+
+												<div class="latest-post-info ">
 													<div class="post-title ">Empty</div>
 													<div class="name-date">
 														<span class="user-name">Empty
@@ -55,70 +57,77 @@
 														<span class="time">Empty</span>
 													</div>
 												{% elseif array[category.id].getType() == "comment" %}
-													<div class="post-title ">{{array[category.id].topic.title}}</div>
-													<div class="name-date">
-														<span class="user-name">{{array[category.id].author.username}}
-														</span>
-														<span class="time">{{array[category.id].createdAt | format_datetime(locale="en")}}</span>
-													</div>
-												{% else %}
-													<div class="post-title ">{{array[category.id].title}}</div>
-													<div class="name-date">
-														<span class="user-name">{{array[category.id].creator.username}}
-														</span>
-														<span class="time">{{array[category.id].createdAt | format_datetime(locale="en")}}</span>
-													</div>
+													<div class="user-image "><img class="rounded-circle " src="{{ vich_uploader_asset(authorsPicture[array[category.id].author.id], 'imageFile') }}"/></div>
 
-												{% endif %}
+													<div class="latest-post-info ">
 
+														<div class="post-title ">{{array[category.id].topic.title}}</div>
+														<div class="name-date">
+															<span class="user-name">{{array[category.id].author.username}}
+															</span>
+															<span class="time">{{array[category.id].createdAt | format_datetime(locale="en")}}</span>
+														</div>
+													{% else %}
+														<div class="user-image "><img class="rounded-circle " src="{{ vich_uploader_asset(authorsPicture[array[category.id].creator.id], 'imageFile') }}"/></div>
+
+														<div class="latest-post-info ">
+
+															<div class="post-title ">{{array[category.id].title}}</div>
+															<div class="name-date">
+																<span class="user-name">{{array[category.id].creator.username}}
+																</span>
+																<span class="time">{{array[category.id].createdAt | format_datetime(locale="en")}}</span>
+															</div>
+
+														{% endif %}
+
+													</div>
+												</div>
+											</div>
+										{% endfor %}
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+
+						<div class="col-4 ">
+
+							<div class="row justify-content-end ">
+								<div class="widget ">
+									<div class="card ">
+										<div class="card-header ">
+											Random
+										</div>
+										<div class="card-body ">
+											<p class="card-text ">Text</p>
+										</div>
+
+									</div>
+								</div>
+							</div>
+							<div class="row justify-content-end ">
+								<div class="widget">
+									<div class="card">
+										<div class="card-header">
+											Statistiques
+										</div>
+										<div class="card-body ">
+
+											<div class="stats-line ">
+												<span class="stats-header ">Type stats</span>
+												<span class="stats-info ">Count</span>
 											</div>
 										</div>
+
 									</div>
-								{% endfor %}
-							</div>
-						</div>
-					{% endfor %}
-				</div>
-
-				<div class="col-4 ">
-
-					<div class="row justify-content-end ">
-						<div class="widget ">
-							<div class="card ">
-								<div class="card-header ">
-									Random
 								</div>
-								<div class="card-body ">
-									<p class="card-text ">Text</p>
-								</div>
-
 							</div>
 						</div>
 					</div>
-					<div class="row justify-content-end ">
-						<div class="widget">
-							<div class="card">
-								<div class="card-header">
-									Statistiques
-								</div>
-								<div class="card-body ">
 
-									<div class="stats-line ">
-										<span class="stats-header ">Type stats</span>
-										<span class="stats-info ">Count</span>
-									</div>
-								</div>
-
-							</div>
-						</div>
-					</div>
 				</div>
+
+
 			</div>
-
-		</div>
-
-
-	</div>
-	{% embed 'footer.html.twig' %}
-	{% endembed %}
-{% endblock %}
+			{% embed 'footer.html.twig' %}{% endembed %}
+		{% endblock %}

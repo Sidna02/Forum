@@ -81,12 +81,12 @@ class CommentRepository extends ServiceEntityRepository
         $querybuilder = $this->_em->createQueryBuilder()
         ->select(['c'])
         ->from('App:Comment', 'c')
-        ->orderBy('c.createdAt', 'ASC')
         ->where('c.topic =:topic')
+        ->orderBy('c.createdAt', 'ASC')
         ->setParameter('topic', $topic);
+dump($querybuilder->getQuery());
 
-
-
+dump($querybuilder->getQuery()->getResult());
         return $querybuilder;
     }
 }
