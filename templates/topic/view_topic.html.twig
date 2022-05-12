@@ -5,49 +5,59 @@
 
 {% block body %}
 	<div class="container">
-	{{dump(profilepictures)}}
 		{{ pagerfanta(comments) }}
 		{% if comments.currentpage == 1 %}
 			<article class="post">
 				<div class="post-creator">
 					<span class="creator-name">{{topic.creator.username}}</span>
-						<img class="creator-picture rounded-circle" src="{{ vich_uploader_asset(profilepictures[topic.creator.id], 'imageFile') }}"/>					<span class="creator-role">Role Name</span>
+					{% if profilepictures[topic.creator.id] is not null %}
+						<img class="creator-picture rounded-circle" src="{{ vich_uploader_asset(profilepictures[topic.creator.id], 'imageFile') }}"/>
+					{% else %}
+						<img class="creator-picture rounded-circle" src="{{defaultImagePath}}"/>
+
+					{% endif %}
+					<span class="creator-role">Role Name</span>
 				</div>
 				<div class="post-wrapper">
 					<div class="post-content ">
 						{{topic.body | raw}}
 					</div>
 					<div class="author-signature">
-						Signature
+						{{topic.creator.signature | raw}}
 					</div>
 				</div>
 			</article>
-			{% endif %} 
-			{% for comment in comments %}
+		{% endif %}
+		{% for comment in comments %}
 
-				<article class="post">
-					<div class="post-creator">
-						<span class="creator-name">{{comment.author.username}}</span>
+			<article class="post">
+				<div class="post-creator">
+					<span class="creator-name">{{comment.author.username}}</span>
+					{% if profilepictures[comment.author.id] is not null %}
 						<img class="creator-picture rounded-circle" src="{{ vich_uploader_asset(profilepictures[comment.author.id], 'imageFile') }}"/>
-						<span class="creator-role">Role Name</span>
-					</div>
-					<div class="post-wrapper">
-						<div class="post-content ">
-							{{comment.body | raw}}
-						</div>
-						<div class="author-signature">
-							Signature
-						</div>
+					{% else %}
+						<img class="creator-picture rounded-circle" src="{{defaultImagePath}}"/>
 
+					{% endif %}
+					<span class="creator-role">Role Name</span>
+				</div>
+				<div class="post-wrapper">
+					<div class="post-content ">
+						{{comment.body | raw}}
+					</div>
+					<div class="author-signature">
+						{{comment.author.signature | raw}}
 					</div>
 
-				</article>
-			{% endfor %}
-			{% if app.user is not null %}
+				</div>
+
+			</article>
+		{% endfor %}
+		{% if app.user is not null %}
 			<a href="{{path('app_post_create', {id: topic.id})}}">
 				<button>Create a comment</button>
 			</a>
-			{% endif %}
-		</div>
-		{% embed 'footer.html.twig' %}{% endembed %}
-	{% endblock %}
+		{% endif %}
+	</div>
+	{% embed 'footer.html.twig' %}{% endembed %}
+{% endblock %}

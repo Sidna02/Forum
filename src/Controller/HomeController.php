@@ -46,9 +46,8 @@ class HomeController extends AbstractController
     {
         $forums = $this->forumRepository->findAll();
         $array = $this->fetchAllCategoriesLastComment($forums);
-        dump($array);
         $authors = TopicController::fetchUsersFromComments($array);
-        $authorsPicture = $this->imageRepository->fetchUsersProfileImage($authors);
+        $authorsPicture = $this->imageRepository->fetchUsersProfileImage($authors, $this->getParameter('default')['userimage']);
 
 
 
@@ -57,7 +56,7 @@ class HomeController extends AbstractController
             'forums' => $forums,
             'array' => $array,
             'authorsPicture' => $authorsPicture,
-            'defaultImage' => new Image(IMAGE::DEFAULT)
+            'defaultImagePath' => $this->getParameter('defaults_directory') . $this->getParameter('default')['userimage'] 
         ]);
     }
     public function fetchAllCategoriesLastComment($forums): array

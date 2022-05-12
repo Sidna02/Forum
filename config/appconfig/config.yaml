@@ -1,4 +1,6 @@
 parameters:
     pagination:
-        app.topic.pages: 4
-        app.comment.pages: 2
+        app.topic.pages: 9
+        app.comment.pages: 14
+    default:
+        userimage: default_pic.png

@@ -8,6 +8,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Traversable;
 use Vich\UploaderBundle\Entity\File as EntityFile;
@@ -79,19 +82,19 @@ class ImageRepository extends ServiceEntityRepository
         ;
     }
     */
-    public function fetchUsersProfileImage($users): array
+    public function fetchUsersProfileImage($users): mixed
     {
         /***
          * @var User[] $users
          * @var User $user
-         * @var EntityManager $em
+         * 
          */
+
         $images = [];
 
-        $default = new Image(IMAGE::DEFAULT);
         foreach ($users as $user) {
             $image = $this->findOneBy(['id' => $user->getProfileImage()]);
-            $images[$user->getId()] = empty($image) ?  $default : $image;
+            $images[$user->getId()] = $image;
         }
         return $images;
     }

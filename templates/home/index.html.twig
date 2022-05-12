@@ -47,7 +47,9 @@
 										<div class="category-latest-post ">
 
 											{% if array[category.id] is null %}
-												<div class="user-image "><img class="rounded-circle " src="{{ vich_uploader_asset(defaultImage, 'imageFile') }}"/></div>
+												<div class="user-image ">
+													<img class="creator-picture rounded-circle" src="{{defaultImagePath}}"/>
+												</div>
 
 												<div class="latest-post-info ">
 													<div class="post-title ">Empty</div>
@@ -57,8 +59,15 @@
 														<span class="time">Empty</span>
 													</div>
 												{% elseif array[category.id].getType() == "comment" %}
-													<div class="user-image "><img class="rounded-circle " src="{{ vich_uploader_asset(authorsPicture[array[category.id].author.id], 'imageFile') }}"/></div>
+													<div class="user-image ">
+														{% if authorsPicture[array[category.id].author.id] is not null %}
 
+															<img class="rounded-circle " src="{{ vich_uploader_asset(authorsPicture[array[category.id].author.id], 'imageFile') }}"/>
+														{% else %}
+															<img class="creator-picture rounded-circle" src="{{defaultImagePath}}"/>
+
+														{% endif %}
+													</div>
 													<div class="latest-post-info ">
 
 														<div class="post-title ">{{array[category.id].topic.title}}</div>
@@ -67,8 +76,19 @@
 															</span>
 															<span class="time">{{array[category.id].createdAt | format_datetime(locale="en")}}</span>
 														</div>
+
 													{% else %}
-														<div class="user-image "><img class="rounded-circle " src="{{ vich_uploader_asset(authorsPicture[array[category.id].creator.id], 'imageFile') }}"/></div>
+														<div class="user-image ">
+
+															{% if authorsPicture[array[category.id].creator.id] is not null %}
+
+																<img class="rounded-circle " src="{{ vich_uploader_asset(authorsPicture[array[category.id].creator.id], 'imageFile') }}"/>
+															{% else %}
+																<img class="creator-picture rounded-circle" src="{{defaultImagePath}}"/>
+
+															{% endif %}
+
+														</div>
 
 														<div class="latest-post-info ">
 

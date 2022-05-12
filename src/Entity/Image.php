@@ -15,23 +15,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Vich\Uploadable]
 class Image
 {
-    public const DEFAULT = 1;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
-    public function __construct($type = null)
+    public function __construct()
     {
-        if($type == null)
-        {
+ 
+        
             $this->image = new EmbeddedFile();
-        }
-        elseif($type == self::DEFAULT)
-        {
-            $this->image = new EmbeddedFile();
-            $this->image->setName('default.png');
-            $this->image->setMimeType('png');
-        }
+        
+  
 
     }
 
@@ -89,4 +83,9 @@ class Image
     {
         return $this->image;
     }
+    public function getAbsolutePath()
+    {
+        $this->imageFile->getLinkTarget();
+    }
+    
 }

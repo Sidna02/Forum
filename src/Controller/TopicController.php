@@ -92,11 +92,14 @@ class TopicController extends AbstractController
 
         $images = TopicController::fetchUsersFromComments($pager);
         $images[] = $topic->getCreator();
-        dump($this->imageRepository->fetchUsersProfileImage($images));
+        dump($this->getParameter('default')['userimage']);
+        dump($this->imageRepository->fetchUsersProfileImage($images, $this->getParameter('default')['userimage']));
         return $this->render('topic/view_topic.html.twig.', [
             'comments' => $pager,
-            'profilepictures'=>$this->imageRepository->fetchUsersProfileImage($images),
-            'topic' => $topic
+            'profilepictures'=>$this->imageRepository->fetchUsersProfileImage($images, $this->getParameter('default')['userimage']),
+            'topic' => $topic,
+            'defaultImagePath'=>        '/'.$this->getParameter('defaults_directory') . $this->getParameter('default')['userimage']
+
         ]);
     }
 
