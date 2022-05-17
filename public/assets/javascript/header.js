@@ -1,7 +1,7 @@
-const hamburger = document.querySelector('.header .nav-bar .nav-list .hamburger');
-const mobile_menu = document.querySelector('.header .nav-bar .nav-list ul');
-const menu_item = document.querySelectorAll('.header .nav-bar .nav-list ul li a');
-const header = document.querySelector('.header.container');
+const hamburger = document.querySelector('.haydora .nav-bar .nav-list .hamburger');
+const mobile_menu = document.querySelector('.haydora .nav-bar .nav-list ul');
+const menu_item = document.querySelectorAll('.haydora .nav-bar .nav-list ul li a');
+const haydora = document.querySelector('.haydora.header-container');
 
 hamburger.addEventListener('click', () => {
 	hamburger.classList.toggle('active');
@@ -11,9 +11,9 @@ hamburger.addEventListener('click', () => {
 document.addEventListener('scroll', () => {
 	var scroll_position = window.scrollY;
 	if (scroll_position > 250) {
-		header.style.backgroundColor = '#29323c';
+		haydora.style.backgroundColor = '#29323c';
 	} else {
-		header.style.backgroundColor = 'transparent';
+		haydora.style.backgroundColor = 'transparent';
 	}
 });
 
