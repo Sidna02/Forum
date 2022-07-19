@@ -29,5 +29,8 @@ services:
             arguments:
                 $targetDirectory: '%upload_directory%'
                 $kernelDirectory: '%kernel.project_dir%'
+    App\Service\ConfigHandler:
+            arguments:
+                $configPath: '%config_file%'
 imports:
     - { resource: 'appconfig/config.yaml' }

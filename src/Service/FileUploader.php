@@ -2,17 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Album;
-use App\Entity\AlbumMedia;
-use App\Entity\ComplaintMedia;
-use App\Entity\ComplaintPost;
-use App\Entity\MessageMedia;
-use App\Entity\Message;
-use App\Entity\PostMedia;
-use App\Entity\Publication;
-use App\Entity\User;
-use App\Repository\AlbumRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
