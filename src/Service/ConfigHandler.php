@@ -24,6 +24,9 @@ class ConfigHandler
     {
         return $this->config['parameters']['default']['userimage'];
     }
+    public function getDefaultImagePath(): ?string{
+        return '/default'.DIRECTORY_SEPARATOR.$this->getDefaultImage();
+    }
     public function getTopicPagination(): ?int
     {
         return $this->config['parameters']['pagination']['app.topic.pages'];

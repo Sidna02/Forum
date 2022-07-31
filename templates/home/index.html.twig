@@ -62,7 +62,7 @@
 													<div class="user-image ">
 														{% if authorsPicture[array[category.id].author.id] is not null %}
 
-															<img class="rounded-circle " src="{{ vich_uploader_asset(authorsPicture[array[category.id].author.id], 'imageFile') }}"/>
+															<img class="rounded-circle " src="{{authorsPicture[array[category.id].author.id]}}"/>
 														{% else %}
 															<img class="creator-picture rounded-circle" src="{{defaultImagePath}}"/>
 

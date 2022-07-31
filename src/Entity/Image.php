@@ -83,9 +83,7 @@ class Image
     {
         return $this->image;
     }
-    public function getAbsolutePath()
-    {
-        $this->imageFile->getLinkTarget();
-    }
+
+
     
 }

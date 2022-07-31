@@ -10,12 +10,9 @@
 			<article class="post">
 				<div class="post-creator">
 					<span class="creator-name">{{topic.creator.username}}</span>
-					{% if profilepictures[topic.creator.id] is not null %}
-						<img class="creator-picture rounded-circle" src="{{ vich_uploader_asset(profilepictures[topic.creator.id], 'imageFile') }}"/>
-					{% else %}
-						<img class="creator-picture rounded-circle" src="{{defaultImagePath}}"/>
 
-					{% endif %}
+						<img class="creator-picture rounded-circle" src="{{ relative_path(profilepictures[topic.creator.id]) }}"/>
+
 					<span class="creator-role">Role Name</span>
 				</div>
 				<div class="post-wrapper">
@@ -33,12 +30,10 @@
 			<article class="post">
 				<div class="post-creator">
 					<span class="creator-name">{{comment.author.username}}</span>
-					{% if profilepictures[comment.author.id] is not null %}
-						<img class="creator-picture rounded-circle" src="{{ vich_uploader_asset(profilepictures[comment.author.id], 'imageFile') }}"/>
-					{% else %}
-						<img class="creator-picture rounded-circle" src="{{defaultImagePath}}"/>
 
-					{% endif %}
+						<img class="creator-picture rounded-circle" src="{{ profilepictures[comment.author.id] }}"/>
+
+
 					<span class="creator-role">Role Name</span>
 				</div>
 				<div class="post-wrapper">

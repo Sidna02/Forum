@@ -29,8 +29,10 @@
 		{% endblock %}
 	</head>
 	<body>
+{% block header %}
 		{% embed 'header.html.twig' %}
 		{% endembed %}
+{% endblock %}
 		{% block body %}{% endblock %}
 	</body>
 </html>
