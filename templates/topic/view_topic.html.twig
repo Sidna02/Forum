@@ -9,9 +9,9 @@
 		{% if comments.currentpage == 1 %}
 			<article class="post">
 				<div class="post-creator">
-					<span class="creator-name">{{topic.creator.username}}</span>
+					<span class="creator-name">{{topic.author.username}}</span>
 
-						<img class="creator-picture rounded-circle" src="{{ relative_path(profilepictures[topic.creator.id]) }}"/>
+						<img class="creator-picture rounded-circle" src="{{ relative_path(profilepictures[topic.author.id]) }}"/>
 
 					<span class="creator-role">Role Name</span>
 				</div>
@@ -20,7 +20,7 @@
 						{{topic.body | raw}}
 					</div>
 					<div class="author-signature">
-						{{topic.creator.signature | raw}}
+						{{topic.author.signature | raw}}
 					</div>
 				</div>
 			</article>

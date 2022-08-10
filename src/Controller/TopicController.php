@@ -75,7 +75,9 @@ class TopicController extends AbstractController
         $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
         $pager->setMaxPerPage($this->getParameter('pagination')['app.comment.pages'])
             ->setCurrentPage($request->get('page', 1));
-        return $this->render('topic/list.html.twig.', [
+
+            $this->getLastCommentByTopics(iterator_to_array($pager->getCurrentPageResults()));
+            return $this->render('topic/list.html.twig.', [
             'topics' => $pager,
             'id' => $id
         ]);
@@ -91,9 +93,8 @@ class TopicController extends AbstractController
         $pager->setMaxPerPage($this->getParameter('pagination')['app.comment.pages'])->setCurrentPage($request->get('page', 1));
 
         $images = TopicController::fetchUsersFromComments($pager);
-        $images[] = $topic->getCreator();
-        dump($this->getParameter('default')['userimage']);
-        dump($this->imageRepository->fetchUsersProfileImage($images, $this->getParameter('default')['userimage']));
+        $images[] = $topic->getAuthor();
+        dump($this->imageRepository->fetchUsersProfileImage($images));
         return $this->render('topic/view_topic.html.twig.', [
             'comments' => $pager,
             'profilepictures'=>$this->imageRepository->fetchUsersProfileImage($images, $this->getParameter('default')['userimage']),
@@ -145,4 +146,30 @@ class TopicController extends AbstractController
         return $authors;
 
     }
+    public function getLastCommentByTopics(array $topics): array
+    {
+        //TODO comments or topics
+        $lastComments = [];
+        foreach($topics as $topic)
+        {
+            dump($topic);
+            $comments = $topic->getComments()->getValues();
+            dump($comments);
+            
+            $count = $topic->getComments()->count();
+            dump($count);
+            if($count > 0)
+            {
+                $lastComments[$topic->getId()]  = $comments[0]; 
+            }
+            else{
+                $lastComments[$topic->getId()] = null;
+            }       
+        }
+        dump($lastComments);
+        return $lastComments;
+ 
+        
+    }
+    
 }

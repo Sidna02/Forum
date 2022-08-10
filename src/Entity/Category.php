@@ -13,10 +13,10 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $title;
+    private ?string $title;
 
     #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'categories')]
     #[ORM\JoinColumn(nullable: false)]
@@ -81,9 +81,7 @@ class Category
     {
         if ($this->topics->removeElement($topic)) {
             // set the owning side to null (unless already changed)
-            if ($topic->getCategory() === $this) {
-                $topic->setCategory(null);
-            }
+            if ($topic->getCategory() === $this) {$topic->setCategory(null);}
         }
 
         return $this;

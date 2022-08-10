@@ -56,7 +56,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $about;
 
-    #[ORM\OneToMany(mappedBy: 'creator', targetEntity: Topic::class)]
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Topic::class)]
     private Collection $topics;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
@@ -67,8 +67,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $signature;
-
-
 
 
     public function __construct()
@@ -234,7 +232,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->topics->contains($topic)) {
             $this->topics[] = $topic;
-            $topic->setCreator($this);
+            $topic->setAuthor($this);
         }
 
         return $this;
@@ -244,8 +242,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->topics->removeElement($topic)) {
             // set the owning side to null (unless already changed)
-            if ($topic->getCreator() === $this) {
-                $topic->setCreator(null);
+            if ($topic->getAuthor() === $this) {
+                $topic->setAuthor(null);
             }
         }
 

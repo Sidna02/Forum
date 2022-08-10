@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TopicRepository;
-use DateTimeInterface;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,37 +11,39 @@ use Doctrine\ORM\Mapping\OrderBy;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 
-#[ORM\Entity(repositoryClass: TopicRepository::class)]
-#[ORM\HasLifecycleCallbacks]
 
-class Topic extends AbstractPost
+#[ORM\MappedSuperclass()]
+#[ORM\HasLifecycleCallbacks]
+abstract class AbstractPost
 {
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private ?string $title = null;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    protected $id; 
 
+    #[ORM\Column(type: 'text')]
+    protected $body;
 
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'topics')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'topics')]
     #[ORM\JoinColumn(nullable: false)]
-    private $category;
+    protected $author;
 
-    #[ORM\OneToMany(mappedBy: 'topic', targetEntity: Comment::class)]
-    private $comments;
-
-
-
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    private bool $isLocked = false;
-
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?DateTimeInterface $lastActivity;
+    #[ORM\Column(type: 'datetime_immutable')]
+    protected $createdAt;
 
 
-    public function __construct(User $user, Category $category)
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    protected $lastEditedAt;
+
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
+    protected $lastEditedBy;
+
+
+
+    public function getId(): ?int
     {
-        $this->author = $user;
-        $this->comments = new ArrayCollection();
-        $this->category = $category;
+        return $this->id;
     }
 
     public function getTitle(): ?string
@@ -104,33 +106,7 @@ class Topic extends AbstractPost
         return $this;
     }
 
-    /**
-     * @return Collection<int, Comment>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
 
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->setTopic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getTopic() === $this) {$comment->setTopic(null);}
-        }
-
-        return $this;
-    }
     public function getLastEditedAt(): ?\DateTimeImmutable
     {
         return $this->lastEditedAt;
@@ -155,23 +131,22 @@ class Topic extends AbstractPost
         return $this;
     }
 
-    public function getIsLocked(): ?bool
+
+    #[ORM\PrePersist]
+    public function updateCreatedAt()
     {
-        return $this->isLocked;
+        $this->createdAt = new DateTimeImmutable();
+    }
+    #[ORM\PreUpdate]
+    public function updateEditedAt()
+    {
+        $this->lastEditedAt = new DateTimeImmutable();
     }
 
-    public function setIsLocked(?bool $isLocked): self
-    {
-        $this->isLocked = $isLocked;
-
-        return $this;
-    }
 
 
-    public function getType()
-    {
-        return "topic";
-    }
+    abstract public function getType();
+
 
     public function getLastActivity(): ?\DateTimeInterface
     {

@@ -47,7 +47,7 @@ class HomeController extends AbstractController
         $forums = $this->forumRepository->findAll();
         $array = $this->fetchAllCategoriesLastComment($forums);
         $authors = TopicController::fetchUsersFromComments($array);
-        $authorsPicture = $this->imageRepository->fetchUsersProfileImage($authors, $this->getParameter('default')['userimage']);
+        $authorsPicture = $this->imageRepository->fetchUsersProfileImage($authors);
 
 
 

@@ -9,26 +9,14 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Comment
+class Comment extends AbstractPost
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
-
-    #[ORM\Column(type: 'text')]
-    private $body;
 
     #[ORM\ManyToOne(targetEntity: Topic::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
     private $topic;
 
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $author;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private $createdAt;
     public function __construct(User $user, Topic $topic)
     {
         $this->author = $user;
@@ -36,10 +24,7 @@ class Comment
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+
 
     public function getBody(): ?string
     {
@@ -65,38 +50,12 @@ class Comment
         return $this;
     }
 
-    public function getAuthor(): ?User
-    {
-        return $this->author;
-    }
 
-    public function setAuthor(User $author): self
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
     public function getType()
     {
         return "comment";
     }
-    #[ORM\PrePersist]
-    public function updateLastActivity()
-    {
-        $this->topic->setLastActivity(new DateTimeImmutable());
-    }
+
 
     
 }

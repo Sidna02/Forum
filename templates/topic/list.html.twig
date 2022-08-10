@@ -30,7 +30,7 @@
 										<a href="{{path('app_topic_view', {id:topic.id})}}">
 											{{topic.title}}</a>
 									</div>
-									<div class="topic-details ">{{topic.creator.username}}
+									<div class="topic-details ">{{topic.author.username}}
 										at
 										{{topic.createdAt | format_datetime(locale='en')}}</div>
 								</div>

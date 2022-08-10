@@ -80,9 +80,9 @@
 													{% else %}
 														<div class="user-image ">
 
-															{% if authorsPicture[array[category.id].creator.id] is not null %}
+															{% if authorsPicture[array[category.id].author.id] is not null %}
 
-																<img class="rounded-circle " src="{{ vich_uploader_asset(authorsPicture[array[category.id].creator.id], 'imageFile') }}"/>
+																<img class="rounded-circle " src="{{ vich_uploader_asset(authorsPicture[array[category.id].author.id], 'imageFile') }}"/>
 															{% else %}
 																<img class="creator-picture rounded-circle" src="{{defaultImagePath}}"/>
 
@@ -94,7 +94,7 @@
 
 															<div class="post-title ">{{array[category.id].title}}</div>
 															<div class="name-date">
-																<span class="user-name">{{array[category.id].creator.username}}
+																<span class="user-name">{{array[category.id].author.username}}
 																</span>
 																<span class="time">{{array[category.id].createdAt | format_datetime(locale="en")}}</span>
 															</div>
