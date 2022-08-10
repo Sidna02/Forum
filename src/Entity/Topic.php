@@ -26,7 +26,7 @@ class Topic extends AbstractPost
     private $category;
 
     #[ORM\OneToMany(mappedBy: 'topic', targetEntity: Comment::class)]
-    private $comments;
+    private Collection $comments;
 
 
 
@@ -183,5 +183,9 @@ class Topic extends AbstractPost
         $this->lastActivity = $lastActivity;
 
         return $this;
+    }
+    public function getLastPostIdentifier(): string
+    {
+    return $this->title;
     }
 }

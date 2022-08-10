@@ -13,13 +13,13 @@ class Forum
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $title;
+    private ?string $title;
 
     #[ORM\OneToMany(mappedBy: 'forum', targetEntity: Category::class, cascade:["persist"], fetch: 'EAGER')]
-    private $categories;
+    private Collection $categories;
 
     public function __construct()
     {

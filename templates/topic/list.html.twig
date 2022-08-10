@@ -2,100 +2,70 @@
 
 {% block title %}Hello TopicController!
 {% endblock %}
-
 {% block body %}
-	<div class="container">
-		<div class="row">
-			<div class="col-md-8 col-6 forum-wrapper ">
 
-				<div class="action row">
-					<div class="col">{{ pagerfanta(topics) }}</div>
-					<div class="col">
-						<div class="thread-btn ">
-							<a href="{{path('app_topic_create', {id: id})}}">Create a new topic</a>
-						</div>
-					</div>
-				</div>
-				<div class="card section-wrapper ">
-					<div class="card-header ">
-						Topics
-					</div>
-					<div class="card-body ">
-						{% for topic in topics %}
-							<div class="topic-wrapper ">
+	<div class="container min-vh-100">
+		            <div class="d-flex flex-wrap justify-content-between mt-5">
+               <div>
+			   <a href="{{path('app_topic_create', {id: id})}}">
+                  <button type="button" class="btn btn-shadow btn-wide btn-primary">
+                  <span class="btn-icon-wrapper pr-2 opacity-7">
+                  <i class="fa fa-plus fa-w-20"></i>
+                  </span>
+                  New thread
+                  </button>
+				  </a>
+               </div>
+               <div class="col-12 col-md-3 p-0 mb-3">
+                  <input type="text" class="form-control" placeholder="Search...">
+               </div>
+            </div>
 
-								<div class="topic-info">
-									<div class="topic-name">
-										<i class="fa fa-lock"></i>
-										<a href="{{path('app_topic_view', {id:topic.id})}}">
-											{{topic.title}}</a>
-									</div>
-									<div class="topic-details ">{{topic.author.username}}
-										at
-										{{topic.createdAt | format_datetime(locale='en')}}</div>
-								</div>
-								<div class="topic-details ">
-									<div class="topic-scope ">
-										<div class="stats-line ">
-											<span class="stats-header ">Views</span>
-											<span class="stats-info ">9</span>
-										</div>
-										<div class="stats-line ">
-											<span class="stats-header ">Posts</span>
-											<span class="stats-info ">9</span>
-										</div>
-									</div>
-									<div class="topic-last ">
-										User Name Date
-									</div>
-									<div class="user-post-img ">
-										<img class="rounded-circle " src="https://picsum.photos/200 " width="50px " height="50px "/>
-									</div>
-								</div>
+            <div class="card mb-3">
+               <div class="card-header pl-0 pr-0">
+                  <div class="row no-gutters w-100 align-items-center">
+                     <div class="col ml-3">Topics</div>
+					 			
+                     <div class="col-4 text-muted">
+                        <div class="row no-gutters align-items-center">
+                           <div class="col-4">Replies</div>
+                           <div class="col-8">Last update</div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+			   {% for topic in topics %}
+               <div class="card-body py-3">
+                  <div class="row no-gutters align-items-center">
+                     <div class="col">
+                        <a href="javascript:void(0)" class="text-big" data-abc="true">{{topic.title}}</a>
+                        <div class="text-muted small mt-1">{{topic.createdAt | date() }} &nbsp;&middot;&nbsp; <a href="javascript:void(0)" class="text-muted" data-abc="true">{{topic.author.username}}</a></div>
+                     </div>
+                     <div class="d-none d-md-block col-4">
+                        <div class="row no-gutters align-items-center">
+                           <div class="col-4">{{ topic.comments.count }}</div>
+                           <div class="media col-8 align-items-center">
+                              <img src="{{pictures[topic.author.id]}}" width=30px height=30px alt="" class="d-block ui-w-30 rounded-circle">
+                              <div class="media-body flex-truncate ml-2">
+                                 <div class="line-height-1 text-truncate">{{lastPosts[topic.id].createdAt | date()}}</div>
+                                 <a href="javascript:void(0)" class="text-muted small text-truncate" data-abc="true">{{lastPosts[topic.id].lastPostIdentifier}}</a>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+			      {% endfor %}
+			   			
+			   
 
+               <hr class="m-0">
 
-							</div>
-						{% endfor %}
-					</div>
-
-				</div>
-
-			</div>
-			<div class="col-md-4 col-sm-6 ">
-
-
-				<div class="widget ">
-					<div class="card ">
-						<div class="card-header ">
-							Random
-						</div>
-						<div class="card-body ">
-							<p class="card-text ">Text</p>
-						</div>
-
-					</div>
-				</div>
+			         {{ pagerfanta(topics) }}
+            </div>
 
 
-				<div class="widget">
-					<div class="card ">
-						<div class="card-header ">
-							Statistiques
-						</div>
-						<div class="card-body ">
 
-							<div class="stats-line ">
-								<span class="stats-header ">Type stats</span>
-								<span class="stats-info ">Count</span>
-							</div>
-						</div>
-
-					</div>
-
-				</div>
-			</div>
-		</div>
-
-	</div>
-	{% embed 'footer.html.twig' %}{% endembed %}
-{% endblock %}
+    </div>
+   {% embed 'footer.html.twig' %}{% endembed %}
+       {% endblock %}

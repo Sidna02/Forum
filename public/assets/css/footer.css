@@ -4,7 +4,7 @@ footer {
     flex-direction: column;
     background-color: #e9f0f5;
     bottom: 0;
-    position: fixed;
+    position: sticky;
 }
 
 .footer-tabs {

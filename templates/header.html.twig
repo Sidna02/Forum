@@ -13,10 +13,8 @@
           <div class="hamburger"><div class="bar"></div></div>
           <ul>
             <li><a href="{{path('app_home')}}" data-after="Home">Home</a></li>
-            <li><a href="" data-after="Ranks">Ranks</a></li>
-            <li><a href="" data-after="Builds">Builds</a></li>
-            <li><a href="" data-after="About">About</a></li>
-            <li><a href="" data-after="Contact">Contact</a></li>
+            <li><a href="#" data-after="About">About</a></li>
+            <li><a href="#" data-after="Contact">Contact</a></li>
             {% if app.user %} <li><a href="{{path('app_profile_settings')}}"> Hello {{app.user.username}} </a></li> {% else %} <li><a href="{{path('app_login')}}"> Sign in </a></li> {% endif %} 
           </ul>
         </div>

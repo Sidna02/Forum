@@ -20,24 +20,24 @@ abstract class AbstractPost
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    protected $id; 
+    protected ?int $id;
 
     #[ORM\Column(type: 'text')]
-    protected $body;
+    protected ?string $body;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'topics')]
     #[ORM\JoinColumn(nullable: false)]
-    protected $author;
+    protected ?User $author;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    protected $createdAt;
+    protected ?DateTimeImmutable $createdAt;
 
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    protected $lastEditedAt;
+    protected ?DateTimeImmutable $lastEditedAt;
 
     #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
-    protected $lastEditedBy;
+    protected ?User $lastEditedBy;
 
 
 
@@ -133,12 +133,12 @@ abstract class AbstractPost
 
 
     #[ORM\PrePersist]
-    public function updateCreatedAt()
+    public function updateCreatedAt(): void
     {
         $this->createdAt = new DateTimeImmutable();
     }
     #[ORM\PreUpdate]
-    public function updateEditedAt()
+    public function updateEditedAt(): void
     {
         $this->lastEditedAt = new DateTimeImmutable();
     }
@@ -159,4 +159,6 @@ abstract class AbstractPost
 
         return $this;
     }
+
+    abstract public function getLastPostIdentifier(): string;
 }

@@ -57,7 +57,6 @@ class ProfileController extends AbstractController
         }
         $form = $this->createForm(ImageType::class, $picture);
         $form->handleRequest($request);
-        dump($request->request->has('image'));
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->em->persist($picture);
@@ -69,7 +68,6 @@ class ProfileController extends AbstractController
         $profileForm = $this->createForm(ProfilesettingsType::class, $user);
 
         $profileForm->handleRequest($request);
-        dump($request->request->has('profilesettings'));
 
 
             if ($profileForm->isSubmitted() && $profileForm->isValid()) {

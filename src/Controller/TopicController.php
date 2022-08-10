@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AbstractPost;
 use App\Entity\Comment;
 use App\Entity\Topic;
 use App\Form\PostCreateType;
@@ -10,18 +11,16 @@ use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;
 use App\Repository\ImageRepository;
 use App\Repository\TopicRepository;
-use DateTime;
-use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Pagerfanta\Doctrine\ORM\QueryAdapter;
-use Pagerfanta\Pagerfanta;
-use Symfony\Config\BabdevPagerfantaConfig;
 
 class TopicController extends AbstractController
 {
@@ -30,20 +29,23 @@ class TopicController extends AbstractController
     private CommentRepository $commentRepository;
     private CategoryRepository $categoryRepository;
     private ImageRepository $imageRepository;
+
     public function __construct(
         EntityManagerInterface $em,
-        TopicRepository $topicRepository,
-        CategoryRepository $categoryRepository,
-        CommentRepository $commentRepository,
-        ImageRepository $imageRepository
+        TopicRepository        $topicRepository,
+        CategoryRepository     $categoryRepository,
+        CommentRepository      $commentRepository,
+        ImageRepository        $imageRepository
 
-    ) {
+    )
+    {
         $this->em = $em;
         $this->topicRepository = $topicRepository;
         $this->commentRepository = $commentRepository;
         $this->categoryRepository = $categoryRepository;
         $this->imageRepository = $imageRepository;
     }
+
     #[Route('/topic/create', name: 'app_topic_create')]
     public function create(Request $request): Response
     {
@@ -51,7 +53,7 @@ class TopicController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_USER");
         $category = $this->categoryRepository->findOneBy(['id' => $_GET['id']]);
         $creator = $this->getUser();
-        $topic =  new Topic($creator, $category);
+        $topic = new Topic($creator, $category);
 
         $form = $this->createForm(TopicCreateType::class, $topic);
         $form->handleRequest($request);
@@ -68,25 +70,70 @@ class TopicController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
     #[Route('/category/{id}', defaults: ['_format' => 'html'], name: 'app_topic_list')]
     public function listTopics(Request $request, $id, int $page = 1,): Response
     {
         $queryBuilder = $this->topicRepository->getTopicsOrderedByActivity($id);
         $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
         $pager->setMaxPerPage($this->getParameter('pagination')['app.comment.pages'])
-            ->setCurrentPage($request->get('page', 1));
+              ->setCurrentPage($request->get('page', 1));
+        $users = $this->getUsersFromTopics(iterator_to_array($pager->getCurrentPageResults()));
 
-            $this->getLastCommentByTopics(iterator_to_array($pager->getCurrentPageResults()));
-            return $this->render('topic/list.html.twig.', [
+
+        //TODO get last comment or post for each topic
+        return $this->render('topic/list.html.twig.', [
             'topics' => $pager,
-            'id' => $id
+            'id' => $id,
+            'pictures' => $this->imageRepository->fetchUsersProfileImage($users),
+            'lastPosts'=>$this->getLastPostByTopics(iterator_to_array($pager->getCurrentPageResults())),
+
         ]);
     }
-    #[Route('/topic/view/{id}', name: 'app_topic_view')]
 
+    public function getUsersFromTopics(array $array)
+    {
+        $res = [];
+        foreach ($array as $element) {
+            if ($element instanceof Topic) {
+
+                $res[] = $element->getAuthor();
+            } else {
+                throw new Exception("It is not an instance of " . Topic::class);
+            }
+        }
+        return $res;
+    }
+
+    /**
+     * @param array $topics
+     * @return AbstractPost[]
+     * [<Topic id, AbstractPost>]
+     */
+    public function getLastPostByTopics(array $topics): array
+    {
+        //TODO comments or topics
+
+        $lastPosts = [];
+        foreach ($topics as $topic) {
+            $post = $topic->getComments()->getValues();
+            $count = $topic->getComments()->count();
+            if ($count > 0) {
+                $lastPosts[$topic->getId()] = $post[0];
+            } else {
+                $lastPosts[$topic->getId()] = $topic;
+            }
+        }
+        dump($lastPosts);
+        return $lastPosts;
+
+
+    }
+
+    #[Route('/topic/view/{id}', name: 'app_topic_view')]
     public function viewTopic(Request $request, $id, int $page = 1): Response
     {
-        
+
         $topic = $this->topicRepository->findOneBy(['id' => $id]);
         $queryBuilder = $this->commentRepository->getCommentsOrderedByActivity($id);
         $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
@@ -97,13 +144,29 @@ class TopicController extends AbstractController
         dump($this->imageRepository->fetchUsersProfileImage($images));
         return $this->render('topic/view_topic.html.twig.', [
             'comments' => $pager,
-            'profilepictures'=>$this->imageRepository->fetchUsersProfileImage($images, $this->getParameter('default')['userimage']),
+            'profilepictures' => $this->imageRepository->fetchUsersProfileImage($images, $this->getParameter('default')['userimage']),
             'topic' => $topic,
-            'defaultImagePath'=>        '/'.$this->getParameter('defaults_directory') . $this->getParameter('default')['userimage']
+            'defaultImagePath' => '/' . $this->getParameter('defaults_directory') . $this->getParameter('default')['userimage']
 
         ]);
     }
 
+    public static function fetchUsersFromComments($comments): array
+    {
+        $authors = [];
+        /***
+         * @var Comment[] $comments
+         *
+         */
+        foreach ($comments as $comment) {
+            if (!empty($comment)) {
+                $authors[] = $comment->getAuthor();
+
+            }
+        }
+        return $authors;
+
+    }
 
     #[Route('/topic/view/{id}/create', name: 'app_post_create')]
     public function postCreate(Request $request, $id): Response
@@ -111,7 +174,7 @@ class TopicController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_USER");
         $topic = $this->topicRepository->findOneBy(['id' => $id]);
         $author = $this->getUser();
-        $post =  new Comment($author, $topic);
+        $post = new Comment($author, $topic);
         $form = $this->createForm(PostCreateType::class, $post);
         $form->handleRequest($request);
 
@@ -126,50 +189,5 @@ class TopicController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-    
 
-    public static function fetchUsersFromComments($comments): array
-    {
-        $authors = [];
-        /***
-         * @var Comment[] $comments
-         * 
-         */
-        foreach($comments as $comment)
-        {
-            if(!empty($comment))
-            {
-                $authors[] = $comment->getAuthor();
-
-            }
-        }
-        return $authors;
-
-    }
-    public function getLastCommentByTopics(array $topics): array
-    {
-        //TODO comments or topics
-        $lastComments = [];
-        foreach($topics as $topic)
-        {
-            dump($topic);
-            $comments = $topic->getComments()->getValues();
-            dump($comments);
-            
-            $count = $topic->getComments()->count();
-            dump($count);
-            if($count > 0)
-            {
-                $lastComments[$topic->getId()]  = $comments[0]; 
-            }
-            else{
-                $lastComments[$topic->getId()] = null;
-            }       
-        }
-        dump($lastComments);
-        return $lastComments;
- 
-        
-    }
-    
 }

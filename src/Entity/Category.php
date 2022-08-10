@@ -13,17 +13,17 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $title;
 
     #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'categories')]
     #[ORM\JoinColumn(nullable: false)]
-    private $forum;
+    private ?Forum $forum;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Topic::class)]
-    private $topics;
+    private Collection $topics;
 
     public function __construct()
     {
