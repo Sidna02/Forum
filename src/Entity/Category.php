@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ORM\Cache]
 class Category
 {
     #[ORM\Id]
@@ -23,6 +24,7 @@ class Category
     private ?Forum $forum;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Topic::class)]
+    #[ORM\Cache]
     private Collection $topics;
 
     public function __construct()

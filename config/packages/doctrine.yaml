@@ -6,6 +6,12 @@ doctrine:
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '13'
     orm:
+        second_level_cache:
+            enabled: true
+            region_cache_driver:
+                type: pool
+                pool: doctrine.second_level_cache_pool
+
         dql:
             datetime_functions: 
                 DATE_FORMAT: DoctrineExtensions\Query\Mysql\DateFormat

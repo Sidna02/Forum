@@ -14,6 +14,7 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 #[ORM\MappedSuperclass()]
 #[ORM\HasLifecycleCallbacks]
+#[ORM\Cache]
 abstract class AbstractPost
 {
 

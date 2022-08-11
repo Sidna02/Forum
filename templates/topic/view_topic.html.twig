@@ -4,14 +4,14 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container">
+	<div class="container min-vh-100">
 		{{ pagerfanta(comments) }}
 		{% if comments.currentpage == 1 %}
 			<article class="post">
 				<div class="post-creator">
 					<span class="creator-name">{{topic.author.username}}</span>
 
-						<img class="creator-picture rounded-circle" src="{{ relative_path(profilepictures[topic.author.id]) }}"/>
+						<img class="creator-picture rounded-circle" width="75px" height="75px" src="{{ relative_path(profilepictures[topic.author.id]) }}"/>
 
 					<span class="creator-role">Role Name</span>
 				</div>
@@ -31,7 +31,7 @@
 				<div class="post-creator">
 					<span class="creator-name">{{comment.author.username}}</span>
 
-						<img class="creator-picture rounded-circle" src="{{ profilepictures[comment.author.id] }}"/>
+						<img class="creator-picture rounded-circle "  width="75px" height="75px"  src="{{ profilepictures[comment.author.id] }}"/>
 
 
 					<span class="creator-role">Role Name</span>

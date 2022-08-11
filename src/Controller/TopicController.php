@@ -102,7 +102,7 @@ class TopicController extends AbstractController
         $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
         $pager->setMaxPerPage($this->getParameter('pagination')['app.comment.pages'])->setCurrentPage($request->get('page', 1));
 
-        $images = ForumUtil::fetchUsersFromAbstractPost($pager);
+        $images = ForumUtil::fetchUsersFromAbstractPost(iterator_to_array($pager->getCurrentPageResults()));
         $images[] = $topic->getAuthor();
         dump($this->imageRepository->fetchUsersProfileImage($images));
         return $this->render('topic/view_topic.html.twig.', [

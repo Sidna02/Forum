@@ -17,3 +17,7 @@ framework:
         # Namespaced pools use the above "app" backend by default
         #pools:
             #my.dedicated.cache: null
+        pools:
+            doctrine.second_level_cache_pool:
+                adapter: cache.app
+
