@@ -1,0 +1,33 @@
+<div class="category-wrapper ">
+  <div class="category-icon-info ">
+    <div class="category-icon ">
+      <i class="fa fa-comment fa-4x "></i>
+    </div>
+    <div class="category-name-stats ">
+      <div class="category-name ">
+        <a href="{{path('app_topic_list', {id: category.id}) }}">
+
+
+        {{ category.title }}
+        </a>
+      </div>
+      <div class="category-stats ">
+        <p>Topics <span class="bold">{{ category.topics.count }}</span> - Number of comments <span class="bold">1</span></p>
+      </div>
+    </div>
+  </div>
+  {% if array[category.id] is not null %}
+    {% set lastPost = array[category.id] %}
+    {% set author = lastPost.author %}
+    {% set authorPicture = authorsPicture[author.id] %}
+  <div class="category-latest-post ">
+    <div class="user-image "><img class="rounded-circle " src="{{ authorPicture }}" /></div>
+    <div class="latest-post-info ">
+      <div class="post-title ">{{  lastPost.lastPostIdentifier | striptags}}</div>
+      <div class="name-date"><span class="user-name">{{  author.username }}</span>
+        <span class="time">{{ lastPost.createdAt | date() }}</span>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>

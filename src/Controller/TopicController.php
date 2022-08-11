@@ -36,9 +36,7 @@ class TopicController extends AbstractController
         CategoryRepository     $categoryRepository,
         CommentRepository      $commentRepository,
         ImageRepository        $imageRepository
-
-    )
-    {
+    ) {
         $this->em = $em;
         $this->topicRepository = $topicRepository;
         $this->commentRepository = $commentRepository;
@@ -86,17 +84,16 @@ class TopicController extends AbstractController
             'topics' => $pager,
             'id' => $id,
             'pictures' => $this->imageRepository->fetchUsersProfileImage($users),
-            'lastPosts'=>$this->getLastPostByTopics(iterator_to_array($pager->getCurrentPageResults())),
+            'lastPosts'=>TopicController::getLastPostByTopics(iterator_to_array($pager->getCurrentPageResults())),
 
         ]);
     }
 
-    public function getUsersFromTopics(array $array)
+    public function getUsersFromTopics(array $array): array
     {
         $res = [];
         foreach ($array as $element) {
             if ($element instanceof Topic) {
-
                 $res[] = $element->getAuthor();
             } else {
                 throw new Exception("It is not an instance of " . Topic::class);
@@ -106,11 +103,11 @@ class TopicController extends AbstractController
     }
 
     /**
-     * @param array $topics
+     * @param Topic[] $topics
      * @return AbstractPost[]
      * [<Topic id, AbstractPost>]
      */
-    public function getLastPostByTopics(array $topics): array
+    public static function getLastPostByTopics(array $topics): array
     {
         //TODO comments or topics
 
@@ -124,10 +121,8 @@ class TopicController extends AbstractController
                 $lastPosts[$topic->getId()] = $topic;
             }
         }
-        dump($lastPosts);
+
         return $lastPosts;
-
-
     }
 
     #[Route('/topic/view/{id}', name: 'app_topic_view')]
@@ -151,21 +146,20 @@ class TopicController extends AbstractController
         ]);
     }
 
+    /**
+     * @param AbstractPost[] $comments
+     * @return User[]
+     */
     public static function fetchUsersFromComments($comments): array
     {
         $authors = [];
-        /***
-         * @var Comment[] $comments
-         *
-         */
+
         foreach ($comments as $comment) {
             if (!empty($comment)) {
                 $authors[] = $comment->getAuthor();
-
             }
         }
         return $authors;
-
     }
 
     #[Route('/topic/view/{id}/create', name: 'app_post_create')]
@@ -189,5 +183,4 @@ class TopicController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-
 }

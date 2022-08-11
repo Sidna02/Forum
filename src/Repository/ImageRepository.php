@@ -60,13 +60,14 @@ class ImageRepository extends ServiceEntityRepository
         }
     }
 
-    public function fetchUsersProfileImage($users): mixed
+    /**
+     * @param User[] $users
+     * @return array
+     * returns users with their corresponding profile picture image paths
+     * with user id as key
+     */
+    public function fetchUsersProfileImage($users): array
     {
-        /***
-         * @var User[] $users
-         * @var User $user
-         * 
-         */
 
         $images = [];
         foreach ($users as $user) {

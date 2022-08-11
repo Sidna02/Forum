@@ -64,11 +64,15 @@ class HomeController extends AbstractController
         $array = [];
         foreach ($forums as $forum) {
             $categories = $forum->getCategories()->getValues();
+            /**
+             * @var Category[] $categories
+             */
             foreach ($categories as $category) {
-                $res = $this->topicRepository->getLastCommentByCategory($category);
-                $array[$category->getId()] = $res;
+            $array[$category->getId()] = $this->topicRepository->getLastCommentByCategory($category);
+
             }
         }
         return $array;
     }
+
 }

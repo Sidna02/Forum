@@ -6,148 +6,66 @@
 {% block body %}
 
 
-	<div class="container">
-		{% for message in app.flashes('success') %}
-			<div class="alert alert-success">{{message}}</div>
-		{% endfor %}
+    <div class="container min-vh-100">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+
+        <div class="container">
+            <div class="row ">
+
+                <div class="col-8 forum-wrapper ">
+                    {% for forum in forums %}
+                        <div class="card section-wrapper ">
+                            <div class="card-header ">
+                                {{ forum.title }}
+                            </div>
+                            <div class="card-body ">
+                                {% for category in forum.categories %}
+                                    {% embed 'home/category-box.html.twig' %}{% endembed %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="col-4 ">
+
+                    <div class="row justify-content-end ">
+                        <div class="widget ">
+                            <div class="card ">
+                                <div class="card-header ">
+                                    Random
+                                </div>
+                                <div class="card-body ">
+                                    <p class="card-text ">Text</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-end ">
+                        <div class="widget">
+                            <div class="card">
+                                <div class="card-header">
+                                    Statistiques
+                                </div>
+                                <div class="card-body ">
+
+                                    <div class="stats-line ">
+                                        <span class="stats-header ">Type stats</span>
+                                        <span class="stats-info ">Count</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
 
-		<div class="container">
-
-			<div class="row ">
-
-
-				<div class="col-8 forum-wrapper ">
-					{% for forum in forums %}
-						<div class="card section-wrapper ">
-							<div class="card-header ">
-
-								{{forum.title}}
-							</div>
-							<div class="card-body ">
-								{% for category in forum.categories %}
-									<div class="category-wrapper ">
-										<div class="category-icon-info ">
-											<div class="category-icon ">
-												<i class="fa fa-comment fa-4x "></i>
-											</div>
-											<div class="category-name-stats ">
-												<div class="category-name ">
-													<a href="{{path('app_topic_list', {id: category.id, page: 1})}}">{{category.title}}</a>
-												</div>
-												<div class="category-stats ">
-													<p>Topics
-														<span class="bold">{{category.topics | length}}</span>
-														- Threads
-														<span class="bold">5</span>
-													</p>
-												</div>
-											</div>
-										</div>
-										<div class="category-latest-post ">
-
-											{% if array[category.id] is null %}
-												<div class="user-image ">
-													<img class="creator-picture rounded-circle" src="{{defaultImagePath}}"/>
-												</div>
-
-												<div class="latest-post-info ">
-													<div class="post-title ">Empty</div>
-													<div class="name-date">
-														<span class="user-name">Empty
-														</span>
-														<span class="time">Empty</span>
-													</div>
-												{% elseif array[category.id].getType() == "comment" %}
-													<div class="user-image ">
-														{% if authorsPicture[array[category.id].author.id] is not null %}
-
-															<img class="rounded-circle " src="{{authorsPicture[array[category.id].author.id]}}"/>
-														{% else %}
-															<img class="creator-picture rounded-circle" src="{{defaultImagePath}}"/>
-
-														{% endif %}
-													</div>
-													<div class="latest-post-info ">
-
-														<div class="post-title ">{{array[category.id].topic.title}}</div>
-														<div class="name-date">
-															<span class="user-name">{{array[category.id].author.username}}
-															</span>
-															<span class="time">{{array[category.id].createdAt | format_datetime(locale="en")}}</span>
-														</div>
-
-													{% else %}
-														<div class="user-image ">
-
-															{% if authorsPicture[array[category.id].author.id] is not null %}
-
-																<img class="rounded-circle " src="{{ vich_uploader_asset(authorsPicture[array[category.id].author.id], 'imageFile') }}"/>
-															{% else %}
-																<img class="creator-picture rounded-circle" src="{{defaultImagePath}}"/>
-
-															{% endif %}
-
-														</div>
-
-														<div class="latest-post-info ">
-
-															<div class="post-title ">{{array[category.id].title}}</div>
-															<div class="name-date">
-																<span class="user-name">{{array[category.id].author.username}}
-																</span>
-																<span class="time">{{array[category.id].createdAt | format_datetime(locale="en")}}</span>
-															</div>
-
-														{% endif %}
-
-													</div>
-												</div>
-											</div>
-										{% endfor %}
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-
-						<div class="col-4 ">
-
-							<div class="row justify-content-end ">
-								<div class="widget ">
-									<div class="card ">
-										<div class="card-header ">
-											Random
-										</div>
-										<div class="card-body ">
-											<p class="card-text ">Text</p>
-										</div>
-
-									</div>
-								</div>
-							</div>
-							<div class="row justify-content-end ">
-								<div class="widget">
-									<div class="card">
-										<div class="card-header">
-											Statistiques
-										</div>
-										<div class="card-body ">
-
-											<div class="stats-line ">
-												<span class="stats-header ">Type stats</span>
-												<span class="stats-info ">Count</span>
-											</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-
-			</div>
-			{% embed 'footer.html.twig' %}{% endembed %}
-		{% endblock %}
+    </div>
+    {% embed 'footer.html.twig' %}{% endembed %}
+{% endblock %}

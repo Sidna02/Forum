@@ -38,7 +38,7 @@
                <div class="card-body py-3">
                   <div class="row no-gutters align-items-center">
                      <div class="col">
-                        <a href="javascript:void(0)" class="text-big" data-abc="true">{{topic.title}}</a>
+                        <a href="{{ path('app_topic_view', {id: topic.id}) }}" class="text-big" data-abc="true">{{topic.title}}</a>
                         <div class="text-muted small mt-1">{{topic.createdAt | date() }} &nbsp;&middot;&nbsp; <a href="javascript:void(0)" class="text-muted" data-abc="true">{{topic.author.username}}</a></div>
                      </div>
                      <div class="d-none d-md-block col-4">
@@ -48,7 +48,7 @@
                               <img src="{{pictures[topic.author.id]}}" width=30px height=30px alt="" class="d-block ui-w-30 rounded-circle">
                               <div class="media-body flex-truncate ml-2">
                                  <div class="line-height-1 text-truncate">{{lastPosts[topic.id].createdAt | date()}}</div>
-                                 <a href="javascript:void(0)" class="text-muted small text-truncate" data-abc="true">{{lastPosts[topic.id].lastPostIdentifier}}</a>
+                                 <a href="{{ path('app_topic_view', {id: topic.id}) }}" class="text-muted small text-truncate" data-abc="true">{{lastPosts[topic.id].lastPostIdentifier | striptags }}</a>
                               </div>
                            </div>
                         </div>

@@ -94,6 +94,8 @@ class TopicRepository extends ServiceEntityRepository
             ->setParameter(1, $cat->getId())
             ->setMaxResults(1)
             ->getOneOrNullResult();
+
+
         return $res;
     }
     public function getTopicsOrderedByActivity(int $cat)
