@@ -11,6 +11,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\CommentRepository;
 use App\Repository\ImageRepository;
 use App\Repository\TopicRepository;
+use App\Util\ForumUtil;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -76,7 +77,7 @@ class TopicController extends AbstractController
         $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
         $pager->setMaxPerPage($this->getParameter('pagination')['app.comment.pages'])
               ->setCurrentPage($request->get('page', 1));
-        $users = $this->getUsersFromTopics(iterator_to_array($pager->getCurrentPageResults()));
+        $users = ForumUtil::fetchUsersFromAbstractPost(iterator_to_array($pager->getCurrentPageResults()));
 
 
         //TODO get last comment or post for each topic
@@ -84,46 +85,13 @@ class TopicController extends AbstractController
             'topics' => $pager,
             'id' => $id,
             'pictures' => $this->imageRepository->fetchUsersProfileImage($users),
-            'lastPosts'=>TopicController::getLastPostByTopics(iterator_to_array($pager->getCurrentPageResults())),
+            'lastPosts'=>ForumUtil::getLastPostByTopics(iterator_to_array($pager->getCurrentPageResults())),
 
         ]);
     }
 
-    public function getUsersFromTopics(array $array): array
-    {
-        $res = [];
-        foreach ($array as $element) {
-            if ($element instanceof Topic) {
-                $res[] = $element->getAuthor();
-            } else {
-                throw new Exception("It is not an instance of " . Topic::class);
-            }
-        }
-        return $res;
-    }
 
-    /**
-     * @param Topic[] $topics
-     * @return AbstractPost[]
-     * [<Topic id, AbstractPost>]
-     */
-    public static function getLastPostByTopics(array $topics): array
-    {
-        //TODO comments or topics
 
-        $lastPosts = [];
-        foreach ($topics as $topic) {
-            $post = $topic->getComments()->getValues();
-            $count = $topic->getComments()->count();
-            if ($count > 0) {
-                $lastPosts[$topic->getId()] = $post[0];
-            } else {
-                $lastPosts[$topic->getId()] = $topic;
-            }
-        }
-
-        return $lastPosts;
-    }
 
     #[Route('/topic/view/{id}', name: 'app_topic_view')]
     public function viewTopic(Request $request, $id, int $page = 1): Response
@@ -134,7 +102,7 @@ class TopicController extends AbstractController
         $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
         $pager->setMaxPerPage($this->getParameter('pagination')['app.comment.pages'])->setCurrentPage($request->get('page', 1));
 
-        $images = TopicController::fetchUsersFromComments($pager);
+        $images = ForumUtil::fetchUsersFromAbstractPost($pager);
         $images[] = $topic->getAuthor();
         dump($this->imageRepository->fetchUsersProfileImage($images));
         return $this->render('topic/view_topic.html.twig.', [
@@ -146,21 +114,7 @@ class TopicController extends AbstractController
         ]);
     }
 
-    /**
-     * @param AbstractPost[] $comments
-     * @return User[]
-     */
-    public static function fetchUsersFromComments($comments): array
-    {
-        $authors = [];
 
-        foreach ($comments as $comment) {
-            if (!empty($comment)) {
-                $authors[] = $comment->getAuthor();
-            }
-        }
-        return $authors;
-    }
 
     #[Route('/topic/view/{id}/create', name: 'app_post_create')]
     public function postCreate(Request $request, $id): Response

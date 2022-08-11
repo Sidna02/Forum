@@ -11,6 +11,7 @@ use App\Entity\Category;
 use App\Entity\Forum;
 use App\Entity\Image;
 use App\Repository\ImageRepository;
+use App\Util\ForumUtil;
 use ArrayIterator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -46,7 +47,7 @@ class HomeController extends AbstractController
     {
         $forums = $this->forumRepository->findAll();
         $array = $this->fetchAllCategoriesLastComment($forums);
-        $authors = TopicController::fetchUsersFromComments($array);
+        $authors = ForumUtil::fetchUsersFromAbstractPost($array);
         $authorsPicture = $this->imageRepository->fetchUsersProfileImage($authors);
 
 
@@ -56,7 +57,7 @@ class HomeController extends AbstractController
             'forums' => $forums,
             'array' => $array,
             'authorsPicture' => $authorsPicture,
-            'defaultImagePath' => $this->getParameter('defaults_directory') . $this->getParameter('default')['userimage'] 
+            'defaultImagePath' => $this->getParameter('defaults_directory') . $this->getParameter('default')['userimage']
         ]);
     }
     public function fetchAllCategoriesLastComment($forums): array
@@ -68,11 +69,9 @@ class HomeController extends AbstractController
              * @var Category[] $categories
              */
             foreach ($categories as $category) {
-            $array[$category->getId()] = $this->topicRepository->getLastCommentByCategory($category);
-
+                $array[$category->getId()] = $this->topicRepository->getLastCommentByCategory($category);
             }
         }
         return $array;
     }
-
 }
