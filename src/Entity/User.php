@@ -1,20 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\DateImmutableType;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Symfony\Component\Validator\Constraints as Assert;
-
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -52,7 +48,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $last_name;
 
     #[ORM\Column(type: 'date', nullable: true)]
-    private $birthdate;
+    private ?\DateTimeInterface $birthdate;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $about;
@@ -61,13 +57,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $topics;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private $registeredAt;
+    private ?DateTimeImmutable $registeredAt;
 
     #[ORM\Column(type: 'integer', nullable: true, name: 'profile_image_id')]
-    private $profileImage;
+    private ?int $profileImage;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $signature;
+    private ?string $signature;
 
 
     public function __construct()

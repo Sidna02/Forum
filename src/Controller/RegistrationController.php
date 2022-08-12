@@ -25,8 +25,7 @@ class RegistrationController extends AbstractController
     public function __construct(EmailVerifier $emailVerifier, LoggerInterface $logger)
     {
         $this->emailVerifier = $emailVerifier;
-       $this->logger = $logger;
-
+        $this->logger = $logger;
     }
 
     #[Route('/register', name: 'app_register')]
@@ -52,7 +51,9 @@ class RegistrationController extends AbstractController
                 $entityManager->flush();
 
                 // generate a signed url and email it to the user
-                $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                $this->emailVerifier->sendEmailConfirmation(
+                    'app_verify_email',
+                    $user,
                     (new TemplatedEmail())
                         ->from(new Address('forum@carpour.com', 'Carpour Team'))
                         ->to($user->getEmail())
@@ -66,9 +67,7 @@ class RegistrationController extends AbstractController
             return $this->render('registration/register.html.twig', [
                 'registrationForm' => $form->createView(),
             ]);
-        }
-        catch(Exception $e)
-        {   
+        } catch (Exception $e) {
             // Logging protocol example
             // Logs messages in a file in app/var/log
             $this->logger->error($e->getMessage());
@@ -76,11 +75,8 @@ class RegistrationController extends AbstractController
             $this->addflash('registration_error', "An error has occured while you were trying to register. Please try again later.");
             throw $e;
             return new Response("An error has occured while you were trying to register. Please try again later.");
-    
         }
- 
-
-}
+    }
 
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, UserRepository $userRepository): Response

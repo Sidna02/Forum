@@ -18,13 +18,6 @@ class ProfilesettingsType extends AbstractType
         $builder
             ->add('first_name')
             ->add('last_name')
-            ->add('birthdate', BirthdayType::class, [
-
-                'years' => range(date('Y') - 100, date('Y')),
-
-
-
-            ])
             ->add('about', TextareaType::class)
             ->add('signature', CKEditorType::class)
             ->add('submit', SubmitType::class)

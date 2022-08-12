@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repository;
 
@@ -9,15 +10,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Traversable;
-use Vich\UploaderBundle\Entity\File as EntityFile;
-use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 /**
  * @extends ServiceEntityRepository<Image>
@@ -60,20 +52,4 @@ class ImageRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @param User[] $users
-     * @return array
-     * returns users with their corresponding profile picture image paths
-     * with user id as key
-     */
-    public function fetchUsersProfileImage($users): array
-    {
-
-        $images = [];
-        foreach ($users as $user) {
-            $image = $this->findOneBy(['id' => $user->getProfileImage()]);
-            $images[$user->getId()] = $image == null ? ($this->config->getDefaultImagePath()) : ('/images/image/'.$image->getImage()->getName());
-        }
-        return $images;
-    }
 }

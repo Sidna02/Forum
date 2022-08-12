@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Twig;
 
@@ -6,7 +7,6 @@ use App\Entity\AbstractPost;
 use App\Entity\Category;
 use App\Entity\Topic;
 use App\Repository\TopicRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 

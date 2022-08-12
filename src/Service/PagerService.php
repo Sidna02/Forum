@@ -1,11 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Service;
 
 use App\Entity\Category;
 use App\Entity\Topic;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\PagerfantaInterface;

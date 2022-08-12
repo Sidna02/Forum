@@ -1,11 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repository;
 
 use App\Entity\Image;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Query;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -112,7 +112,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $emConfig = $this->_em->getConfiguration();
         $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
-        $rsm = new ResultSetMapping();
         $query = $this->_em->createQuery('SELECT YEAR(u.birthdate) y, count(u) c  FROM App:User u WHERE u.birthdate is NOT NULL GROUP BY y ORDER BY y ASC');
         return $users = $query->getResult();
     }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -19,7 +20,7 @@ class Image
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id;
     public function __construct()
     {
  
@@ -46,7 +47,7 @@ class Image
     /***
      * @var EmbeddedFile
      */
-    private $image;
+    private EmbeddedFile $image;
 
     /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance

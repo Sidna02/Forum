@@ -13,15 +13,21 @@
 
 			<div class="col-12 profile-settings">
 				<div class="card-title text-muted">Your Settings</div>
+				{{ form_start(profileSettingsForm) }}
 
-				{{form(profileSettingsForm)}}
+				{{ form_row(profileSettingsForm.about) }}
+				{{ form_row(profileSettingsForm.signature) }}
+				{{ form_row(profileSettingsForm.submit) }}
+				{{ form_end(profileSettingsForm) }}
 				</div>
 			</div>
 			<div class="col-12 profile-picture-form">
 
 					<div class="card-title text-muted"><h6>Edit your profile image</h6></div>
-
-					{{form(profilePictureForm)}}
+				{{ form_start(profilePictureForm) }}
+					{{form_row(profilePictureForm.imageFile)}}
+					{{form_row(profilePictureForm.update)}}
+				{{ form_end(profilePictureForm) }}
 					</div>
 
 			</div>

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -50,11 +51,9 @@ class TopicController extends AbstractController
 
     #[Route('/category/{id}', name: 'app_topic_list', defaults: ['_format' => 'html'])]
     #[ParamConverter('category', Category::class)]
-    public function listTopics(Request $request, Category $category, PagerService $pagerService, int $page = 1): Response
+    public function listTopics(Category $category, PagerService $pagerService): Response
     {
         $pager = $pagerService->getPagerForTopics($category);
-
-        //TODO get last comment or post for each topic
 
         return $this->render('topic/list.html.twig.', [
             'topics' => $pager,
@@ -65,7 +64,7 @@ class TopicController extends AbstractController
 
 
     #[Route('/topic/view/{id}', name: 'app_topic_view')]
-    public function viewTopic(Request $request, Topic $topic, PagerService $pagerService, int $currentPage = 1): Response
+    public function viewTopic(Topic $topic, PagerService $pagerService, int $currentPage = 1): Response
     {
         $pager = $pagerService->getPagerForComments($topic, $currentPage);
 

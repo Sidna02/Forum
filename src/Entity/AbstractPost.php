@@ -1,18 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Repository\TopicRepository;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\OrderBy;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 
-
-
-#[ORM\MappedSuperclass()]
+#[ORM\MappedSuperclass]
 #[ORM\HasLifecycleCallbacks]
 abstract class AbstractPost
 {
@@ -48,17 +42,6 @@ abstract class AbstractPost
         return $this->id;
     }
 
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
 
     public function getBody(): ?string
     {
@@ -84,37 +67,25 @@ abstract class AbstractPost
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
 
-    public function setCategory(?Category $category): self
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
-
-    public function getLastEditedAt(): ?\DateTimeImmutable
+    public function getLastEditedAt(): ?DateTimeImmutable
     {
         return $this->lastEditedAt;
     }
 
-    public function setLastEditedAt(?\DateTimeImmutable $lastEditedAt): self
+    public function setLastEditedAt(?DateTimeImmutable $lastEditedAt): self
     {
         $this->lastEditedAt = $lastEditedAt;
 
@@ -144,7 +115,6 @@ abstract class AbstractPost
     {
         $this->lastEditedAt = new DateTimeImmutable();
     }
-
 
 
     abstract public function getType();

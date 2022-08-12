@@ -49,31 +49,28 @@ class ProfileController extends AbstractController
     {
         /***
          * @var User $user
-         * 
+         *
          */
         $user = $this->getUser();
-        $picture = $this->imageRepository->findOneBy(['id' => $user->getProfileImage()]);
-        if (!$picture) {
-            $picture = new Image();
-        }
+        $picture = new Image();
         $form = $this->createForm(ImageType::class, $picture);
         $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->em->persist($picture);
-                $this->em->flush();
-                $user->setProfileImage($picture);
-                $this->em->flush();
-            }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->persist($picture);
+            $this->em->flush();
+            $user->setProfileImage($picture);
+            $this->em->flush();
+        }
 
         $profileForm = $this->createForm(ProfilesettingsType::class, $user);
 
         $profileForm->handleRequest($request);
 
 
-            if ($profileForm->isSubmitted() && $profileForm->isValid()) {
-                $this->em->flush();
-            }
+        if ($profileForm->isSubmitted() && $profileForm->isValid()) {
+            $this->em->flush();
+        }
 
 
         return $this->render('profile/index.html.twig', [
