@@ -11,7 +11,7 @@
 	{% for error in app.flashes('registration_error') %}
 		{{error}}
 	{% endfor %}
-	<div class="container">
+	<div class="container min-vh-100">
 		<div class="card m-auto w-50" ;>
 			<div class="card-body">
 				{{ form_start(registrationForm) }}

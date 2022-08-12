@@ -74,19 +74,10 @@ class CommentRepository extends ServiceEntityRepository
         ;
     }
     */
-    public function getCommentsOrderedByActivity(int $topic)
 
+    public function countComments(): int
     {
-
-        $querybuilder = $this->_em->createQueryBuilder()
-        ->select(['c'])
-        ->from('App:Comment', 'c')
-        ->where('c.topic =:topic')
-        ->orderBy('c.createdAt', 'ASC')
-        ->setParameter('topic', $topic);
-dump($querybuilder->getQuery());
-
-dump($querybuilder->getQuery()->getResult());
-        return $querybuilder;
+        $query = $this->_em->createQuery('SELECT count(c) as count FROM App:Comment c');
+        return $query->getOneOrNullResult()['count'];
     }
 }

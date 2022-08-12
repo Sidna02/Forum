@@ -72,8 +72,6 @@ class ImageRepository extends ServiceEntityRepository
         $images = [];
         foreach ($users as $user) {
             $image = $this->findOneBy(['id' => $user->getProfileImage()]);
-            dump($this->config);
-            dump($image);
             $images[$user->getId()] = $image == null ? ($this->config->getDefaultImagePath()) : ('/images/image/'.$image->getImage()->getName());
         }
         return $images;

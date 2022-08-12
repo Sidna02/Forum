@@ -1,0 +1,16 @@
+<div class="widget">
+    <div class="card">
+        <div class="card-header">
+            <i class="fa-solid fa-chart-column"></i> Forum Statistics
+        </div>
+        <div class="card-body d-flex flex-column">
+            {% for key, value in stats %}
+            <div class="stats-line">
+                <span class="stats-header">{{ key}}</span>
+                <span class="stats-info ">{{ value }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>

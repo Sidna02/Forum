@@ -1,6 +1,5 @@
 body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    background-color: #e9f0f5;
     min-height: 100vh;
     margin-bottom: 100px;
     clear: both;
@@ -9,9 +8,10 @@ body {
 
 .container {
     background-color: white;
-    height: 100vh;
     padding-top: 1%;
+    background-color: #e9f0f5;
 }
+
 
 .bold {
     font-weight: bold;

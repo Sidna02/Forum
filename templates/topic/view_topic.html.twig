@@ -1,17 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TopicController!
+{% block title %}{{topic.title}}
 {% endblock %}
 
 {% block body %}
 	<div class="container min-vh-100">
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">{{ message }}</div>
+		{% endfor %}
 		{{ pagerfanta(comments) }}
 		{% if comments.currentpage == 1 %}
 			<article class="post">
 				<div class="post-creator">
 					<span class="creator-name">{{topic.author.username}}</span>
 
-						<img class="creator-picture rounded-circle" width="75px" height="75px" src="{{ relative_path(profilepictures[topic.author.id]) }}"/>
+						<img class="creator-picture rounded-circle" width="75px" height="75px" src="{{ userImagePath(topic.author) }}"/>
 
 					<span class="creator-role">Role Name</span>
 				</div>
@@ -31,7 +34,7 @@
 				<div class="post-creator">
 					<span class="creator-name">{{comment.author.username}}</span>
 
-						<img class="creator-picture rounded-circle "  width="75px" height="75px"  src="{{ profilepictures[comment.author.id] }}"/>
+						<img class="creator-picture rounded-circle "  width="75px" height="75px"  src="{{ userImagePath(comment.author) }}"/>
 
 
 					<span class="creator-role">Role Name</span>

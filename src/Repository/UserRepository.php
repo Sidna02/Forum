@@ -93,7 +93,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     */
-    public function findLatestMember(): User
+    public function findLatestMember(): ?User
     {
         $result = $this->_em->createQuery("SELECT u FROM App:User u ORDER BY u.registeredAt DESC")
             ->setMaxResults(1)
@@ -102,6 +102,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             return null;
         }
         return $result[0];
+    }
+    public function countUsers(): int
+    {
+        $query = $this->_em->createQuery('SELECT count(u) as count FROM App:User u');
+        return $query->getOneOrNullResult()['count'];
     }
     public function countBirthDatesByYear()
     {
@@ -121,7 +126,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $query = $this->_em->createQuery("SELECT i FROM App:Image i  Where i.id = ?1")
             ->setParameter(1, $user->getProfileImage());
-            dump($query->getOneOrNullResult());
         return $query->getOneOrNullResult();
     }
 }

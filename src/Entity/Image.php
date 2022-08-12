@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[Vich\Uploadable]
-#[ORM\Cache]
+#[ORM\Cache('NONSTRICT_READ_WRITE')]
 class Image
 {
     #[ORM\Id]

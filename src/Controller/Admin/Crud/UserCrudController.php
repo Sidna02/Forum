@@ -20,10 +20,12 @@ use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 class UserCrudController extends AbstractCrudController
 {
     private UserPasswordHasherInterface $passwordHasherInterface;
+
     public function __construct(UserPasswordHasherInterface $passwordHasherInterface)
     {
         $this->passwordHasherInterface = $passwordHasherInterface;
     }
+
     public static function getEntityFqcn(): string
     {
         return User::class;
@@ -49,10 +51,9 @@ class UserCrudController extends AbstractCrudController
             DateTimeField::new('registeredAt'),
 
 
-
-
         ];
     }
+
     /**
      * @param User $entityInstance
      */
@@ -65,5 +66,5 @@ class UserCrudController extends AbstractCrudController
 
         parent::persistEntity($entityManager, $entityInstance);
     }
- 
+
 }

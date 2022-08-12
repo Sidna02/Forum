@@ -19,14 +19,16 @@ class AdminStats
     private CategoryRepository $categoryRepository;
     private UserRepository $userRep;
     private ChartBuilderInterface $chartBuilder;
+
     public function __construct(
-        ChartBuilderInterface $chartBuilder,
+        ChartBuilderInterface  $chartBuilder,
         EntityManagerInterface $em,
-        TopicRepository $topicRepository,
-        CategoryRepository $categoryRepository,
-        CommentRepository $commentRepository,
-        UserRepository $userRep
-    ) {
+        TopicRepository        $topicRepository,
+        CategoryRepository     $categoryRepository,
+        CommentRepository      $commentRepository,
+        UserRepository         $userRep
+    )
+    {
         $this->chartBuilder = $chartBuilder;
         $this->em = $em;
         $this->topicRepository = $topicRepository;
@@ -34,6 +36,7 @@ class AdminStats
         $this->categoryRepository = $categoryRepository;
         $this->userRep = $userRep;
     }
+
     public function getBirthStats(): Chart
     {
         $users = $this->userRep->countBirthDatesByYear();
@@ -47,7 +50,7 @@ class AdminStats
         $chart = $this->chartBuilder->createChart(Chart::TYPE_PIE);
         $chart->setData([
             'labels' => $labels,
-            
+
             'datasets' => [
                 [
                     'label' => 'Registed Users by Birth Year',
@@ -60,6 +63,7 @@ class AdminStats
         $chart->setOptions([]);
         return $chart;
     }
+
     public function getRegistrationsPerDays(): Chart
     {
         $results = $this->userRep->countRegistrationsByDay();
@@ -69,8 +73,8 @@ class AdminStats
             $labels[] = $result['date'];
             $count[] = $result['c'];
         }
-        $labels[]="2022-05-01";
-        $count[]=0;
+        $labels[] = "2022-05-01";
+        $count[] = 0;
         $chart = $this->chartBuilder->createChart(Chart::TYPE_BAR);
 
 
@@ -78,7 +82,7 @@ class AdminStats
             'labels' => $labels,
             'datasets' => [
                 [
-                    'label'=>'Registrations per Date',
+                    'label' => 'Registrations per Date',
                     'backgroundColor' => $this->getRandomColors(1),
                     'data' => $count,
                 ],
@@ -88,30 +92,30 @@ class AdminStats
         $chart->setOptions(
             [
                 'scales' =>
-                [
-                    
-                    'y' =>
                     [
-                        'ticks' =>
-                        [
-                            'beginAtZero'=>true,
-                            'precision' => 0,
-                        ]
+
+                        'y' =>
+                            [
+                                'ticks' =>
+                                    [
+                                        'beginAtZero' => true,
+                                        'precision' => 0,
+                                    ]
+                            ]
                     ]
-                ]
             ]
         );
         dump($chart);
         return $chart;
     }
+
     public static function getRandomColors($n): array
     {
         $colors = [];
-        for($i = 0; $i<$n; $i++)
-        {
-            $colors[]='#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+        for ($i = 0; $i < $n; $i++) {
+            $colors[] = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
         }
-       
+
 
         return $colors;
 

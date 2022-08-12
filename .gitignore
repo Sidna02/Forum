@@ -2138,3 +2138,8 @@ public/assets/css/fontawesome/webfonts/fa-v4compatibility.ttf
 public/assets/css/fontawesome/webfonts/fa-v4compatibility.woff2
 .idea/
 public/images
+
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+/phpcs.xml
+###< squizlabs/php_codesniffer ###

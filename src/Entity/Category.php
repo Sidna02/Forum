@@ -24,7 +24,7 @@ class Category
     private ?Forum $forum;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Topic::class)]
-    #[ORM\Cache]
+    #[ORM\Cache('READ_ONLY')]
     private Collection $topics;
 
     public function __construct()

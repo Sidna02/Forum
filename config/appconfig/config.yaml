@@ -3,4 +3,4 @@ parameters:
         app.topic.pages: 9
         app.comment.pages: 14
     default:
-        userimage: default_pic.png
+        userimage: default_pic.png # public/default

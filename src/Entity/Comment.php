@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\Cache]
+#[ORM\Cache('NONSTRICT_READ_WRITE')]
 class Comment extends AbstractPost
 {
 
@@ -22,6 +22,7 @@ class Comment extends AbstractPost
         $this->author = $user;
         $this->topic = $topic;
         $this->createdAt = new DateTimeImmutable();
+        $topic->setLastActivity($this->createdAt);
     }
 
     public function setBody(string $body): self
@@ -57,6 +58,9 @@ class Comment extends AbstractPost
     {
         return $this->body;
     }
+
+
+
 
 
 }

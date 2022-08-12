@@ -2,12 +2,15 @@
 
 namespace App\Repository;
 
+use App\Entity\AbstractPost;
 use App\Entity\Category;
 use App\Entity\Topic;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -77,7 +80,7 @@ class TopicRepository extends ServiceEntityRepository
     }
     */
 
-    public function getLastCommentByCategory(Category $cat)
+    public function getLastAbstractPostByCategory(Category $cat): ?AbstractPost
     {
         $res = $this->_em->createQuery("SELECT co from App:Category c INNER JOIN App:Topic ti WITH ti.category = ?1 INNER JOIN App:Comment co WITH ti.id=co.topic ORDER BY co.createdAt DESC")
             ->setParameter(1, $cat->getId())
@@ -88,29 +91,44 @@ class TopicRepository extends ServiceEntityRepository
         }
         return $res;
     }
-    public function getLastTopicByCategory(Category $cat)
+
+    /**
+     * @param Category $cat
+     * @return AbstractPost|Topic
+     * @throws NonUniqueResultException
+     */
+    public function getLastTopicByCategory(Category $cat): ?AbstractPost
     {
         $res = $this->_em->createQuery("SELECT ti from App:Category c INNER JOIN App:Topic ti WITH ti.category = ?1 ORDER BY ti.createdAt DESC")
             ->setParameter(1, $cat->getId())
             ->setMaxResults(1)
             ->getOneOrNullResult();
 
+        return $res;
+    }
+
+    /**
+     * @param Topic $topic
+     * @return AbstractPost
+     * @throws NonUniqueResultException
+     */
+    public function getLastAbstractPostByTopic(Topic $topic): ?AbstractPost
+    {
+        $res = $this->_em->createQuery("SELECT c FROM App:Comment c INNER JOIN App:Topic t WITH c.topic = ?1 ORDER BY c.createdAt DESC")
+            ->setParameter(1, $topic->getId())
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+        if ($res == null) {
+            return $topic;
+        }
+
 
         return $res;
     }
-    public function getTopicsOrderedByActivity(int $cat)
 
+    public function countTopics(): int
     {
-
-        $querybuilder = $this->_em->createQueryBuilder()
-        ->select(['t'])
-        ->from('App:Topic', 't')
-        ->orderBy('t.lastActivity', 'DESC')
-        ->where('t.category =:cat')
-        ->setParameter('cat', $cat);
-
-
-
-        return $querybuilder;
+        $query = $this->_em->createQuery('SELECT count(t) as count FROM App:Topic t');
+        return $query->getOneOrNullResult()['count'];
     }
 }

@@ -14,7 +14,6 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 #[ORM\MappedSuperclass()]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\Cache]
 abstract class AbstractPost
 {
 
@@ -28,6 +27,7 @@ abstract class AbstractPost
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'topics')]
     #[ORM\JoinColumn(nullable: false)]
+    #[ORM\Cache('NONSTRICT_READ_WRITE')]
     protected ?User $author;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -38,6 +38,7 @@ abstract class AbstractPost
     protected ?DateTimeImmutable $lastEditedAt;
 
     #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
+    #[ORM\Cache('NONSTRICT_READ_WRITE')]
     protected ?User $lastEditedBy;
 
 
@@ -149,17 +150,6 @@ abstract class AbstractPost
     abstract public function getType();
 
 
-    public function getLastActivity(): ?\DateTimeInterface
-    {
-        return $this->lastActivity;
-    }
-
-    public function setLastActivity(?\DateTimeInterface $lastActivity): self
-    {
-        $this->lastActivity = $lastActivity;
-
-        return $this;
-    }
 
     abstract public function getLastPostIdentifier(): string;
 }

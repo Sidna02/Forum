@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!
+{% block title %}Home Page
 {% endblock %}
 
 {% block body %}
@@ -30,35 +30,10 @@
                 </div>
                 <div class="col-4 ">
 
+                    {# widgets section #}
                     <div class="row justify-content-end ">
-                        <div class="widget ">
-                            <div class="card ">
-                                <div class="card-header ">
-                                    Random
-                                </div>
-                                <div class="card-body ">
-                                    <p class="card-text ">Text</p>
-                                </div>
 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row justify-content-end ">
-                        <div class="widget">
-                            <div class="card">
-                                <div class="card-header">
-                                    Statistiques
-                                </div>
-                                <div class="card-body ">
-
-                                    <div class="stats-line ">
-                                        <span class="stats-header ">Type stats</span>
-                                        <span class="stats-info ">Count</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+                        {{render(path('app_stats'))}}
                     </div>
                 </div>
             </div>

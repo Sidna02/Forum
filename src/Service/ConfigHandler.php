@@ -7,8 +7,8 @@ use Symfony\Component\Yaml\Yaml;
 
 class ConfigHandler
 {
-    private ?string $configPath;
-    private mixed $config;
+    private string $configPath;
+    private array $config;
     private Filesystem $filesystem;
     public function __construct($configPath)
     {
@@ -24,7 +24,8 @@ class ConfigHandler
     {
         return $this->config['parameters']['default']['userimage'];
     }
-    public function getDefaultImagePath(): ?string{
+    public function getDefaultImagePath(): ?string
+    {
         return '/default'.DIRECTORY_SEPARATOR.$this->getDefaultImage();
     }
     public function getTopicPagination(): ?int

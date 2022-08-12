@@ -74,4 +74,17 @@ class CategoryRepository extends ServiceEntityRepository
     }
     */
 
+    public function countTopicsByCategory(Category $category): int
+    {
+        $query = $this->_em->createQuery('SELECT count(t) as count FROM App:Topic t WHERE t.category = ?1')
+                            ->setParameter(1, $category);
+        return $query->getOneOrNullResult()['count'];
+    }
+    public function countCommentsByCategory(Category $category)
+    {
+        $query = $this->_em->createQuery("SELECT count(c) as count FROM App:Topic t INNER JOIN App:Comment c WITH c.topic = t.id AND t.category = ?1")
+            ->setParameter(1, $category);
+        return $query->getOneOrNullResult()['count'];
+    }
+
 }

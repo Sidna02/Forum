@@ -22,6 +22,10 @@ a {
     align-items: center;
     justify-content: center;
 }
+#haydora
+{
+    margin-bottom: 10px;
+}
 
 .section-title {
     font-size: 4rem;

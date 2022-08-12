@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\CommentRepository;
 use App\Repository\TopicRepository;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,36 +17,28 @@ class StatsController extends AbstractController
 {
     private UserRepository $userRepository;
     private TopicRepository $topicRepository;
-    private EntityManager $em;
     private CommentRepository $commentRepository;
     public function __construct(
         UserRepository $userRepository,
-        EntityManagerInterface $em,
         TopicRepository $topicRepository,
         CommentRepository $commentRepository
     ) {
         $this->userRepository = $userRepository;
         $this->topicRepository = $topicRepository;
         $this->commentRepository = $commentRepository;
-        $this->em = $em;
     }
     #[Route('/stats', name: 'app_stats')]
     public function index(): Response
     {
-        dump("Users count!");
-        dump(count($this->userRepository->findAll()));
-        dump("Topics count!");
-        dump(count($this->topicRepository->findAll()));
-        dump("Posts count!");
-        dump(count($this->commentRepository->findAll()));
-        dump("Latest member");
-        dump($this->userRepository->findLatestMember());
-        dump($this->userRepository->countRegistrationsByDay());
+        $stats = [];
+        $lastMember = $this->userRepository->findLatestMember();
+        $stats['Latest Member'] = $lastMember != null? $lastMember->getUsername() : "None";
+        $stats['Comments Count'] = $this->commentRepository->countComments();
+        $stats['Topics Count'] = $this->topicRepository->countTopics();
+        $stats['Users Count'] = $this->userRepository->countUsers();
 
-
-
-        return $this->render('base.html.twig', [
-            'controller_name' => 'StatsController',
+        return $this->render('widget_stats.html.twig', [
+        'stats'=>$stats,
         ]);
     }
 }

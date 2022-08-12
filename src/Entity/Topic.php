@@ -10,10 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 
-
 #[ORM\Entity(repositoryClass: TopicRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-
+#[ORM\Cache('NONSTRICT_READ_WRITE')]
 class Topic extends AbstractPost
 {
 
@@ -25,7 +24,7 @@ class Topic extends AbstractPost
     #[ORM\JoinColumn(nullable: false)]
     private $category;
 
-    #[ORM\OneToMany(mappedBy: 'topic', targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'topic', targetEntity: Comment::class, cascade: ['persist'])]
     private Collection $comments;
 
 
@@ -126,7 +125,9 @@ class Topic extends AbstractPost
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getTopic() === $this) {$comment->setTopic(null);}
+            if ($comment->getTopic() === $this) {
+                $comment->setTopic(null);
+            }
         }
 
         return $this;
@@ -186,6 +187,7 @@ class Topic extends AbstractPost
     }
     public function getLastPostIdentifier(): string
     {
-    return $this->title;
+        return $this->title;
     }
+
 }
