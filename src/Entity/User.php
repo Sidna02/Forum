@@ -59,7 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?DateTimeImmutable $registeredAt;
 
-    #[ORM\Column(type: 'integer', nullable: true, name: 'profile_image_id')]
+    #[ORM\Column(name: 'profile_image_id', type: 'integer', nullable: true)]
     private ?int $profileImage;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
