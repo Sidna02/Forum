@@ -24,7 +24,7 @@
         <div class="category-latest-post ">
             <div class="user-image "><img class="rounded-circle " src="{{ userImagePath(lastPost.author) }}"/></div>
             <div class="latest-post-info ">
-                <div class="post-title ">{{ lastPost.lastPostIdentifier | striptags }}</div>
+                <div class="post-title "><a href="{{ generate_post_url(lastPost) }}">{{ lastPost.lastPostIdentifier | striptags }}</a></div>
                 <div class="name-date"><span class="user-name">{{ lastPost.author.username }}</span>
                     <span class="time">{{ lastPost.createdAt | date() }}</span>
                 </div>

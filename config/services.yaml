@@ -8,6 +8,7 @@ parameters:
     defaults_directory: 'default/'
     config_file: '%kernel.project_dir%/config/appconfig/config.yaml'
 
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -33,6 +34,8 @@ services:
             arguments:
                 $configPath: '%config_file%'
     App\Service\PagerService:
+    App\Service\DiscordService:
+
 
 imports:
     - { resource: 'appconfig/config.yaml' }

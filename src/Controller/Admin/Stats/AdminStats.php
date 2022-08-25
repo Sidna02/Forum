@@ -27,8 +27,7 @@ class AdminStats
         CategoryRepository     $categoryRepository,
         CommentRepository      $commentRepository,
         UserRepository         $userRep
-    )
-    {
+    ) {
         $this->chartBuilder = $chartBuilder;
         $this->em = $em;
         $this->topicRepository = $topicRepository;
@@ -75,7 +74,7 @@ class AdminStats
         }
         $labels[] = "2022-05-01";
         $count[] = 0;
-        $chart = $this->chartBuilder->createChart(Chart::TYPE_BAR);
+        $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
 
 
         $chart->setData([
@@ -83,7 +82,8 @@ class AdminStats
             'datasets' => [
                 [
                     'label' => 'Registrations per Date',
-                    'backgroundColor' => $this->getRandomColors(1),
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'borderColor' => 'rgb(255, 99, 132)',
                     'data' => $count,
                 ],
             ],
@@ -118,6 +118,5 @@ class AdminStats
 
 
         return $colors;
-
     }
 }
