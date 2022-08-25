@@ -1,4 +1,8 @@
 parameters:
+    discord:
+        error_channel: '%env(DISCORD_ERROR_DSN)%'
+    dev_emails: ['test@example.com']
+    email_from: 'forum@carpour.com'
     pagination:
         app.topic.pages: 9
         app.comment.pages: 14

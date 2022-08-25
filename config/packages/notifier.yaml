@@ -1,0 +1,19 @@
+framework:
+    notifier:
+        #chatter_transports:
+        #    slack: '%env(SLACK_DSN)%'
+        #    telegram: '%env(TELEGRAM_DSN)%'
+        #texter_transports:
+        #    twilio: '%env(TWILIO_DSN)%'
+        #    nexmo: '%env(NEXMO_DSN)%'
+        channel_policy:
+            # use chat/slack, chat/telegram, sms/twilio or sms/nexmo
+            urgent: ['email', 'chat/discord_error']
+            high: ['email']
+            medium: ['email']
+            low: ['email', 'chat/discord']
+        chatter_transports:
+            discord: '%env(DISCORD_DSN)%'
+            discord_error: '%env(DISCORD_ERROR_DSN)%'
+        admin_recipients:
+            - { email: admin@example.com }

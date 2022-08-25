@@ -52,6 +52,7 @@ class ConfigHandler
         $this->config['parameters']['default']['userimage'] = $imageFileName;
         return $this->config;
     }
+
     public function saveConfig(): void
     {
         $this->filesystem->dumpFile($this->configPath, YAML::dump($this->config, 10));

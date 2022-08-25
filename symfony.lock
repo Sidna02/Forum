@@ -167,18 +167,6 @@
             "./config/packages/sensio_framework_extra.yaml"
         ]
     },
-    "snc/redis-bundle": {
-        "version": "4.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "2.0",
-            "ref": "36b3d9ab65be62de4e085a25e6ca899efa96b1f3"
-        },
-        "files": [
-            "./config/packages/snc_redis.yaml"
-        ]
-    },
     "squizlabs/php_codesniffer": {
         "version": "3.7",
         "recipe": {
@@ -232,6 +220,15 @@
     },
     "symfony/deprecation-contracts": {
         "version": "v3.0.1"
+    },
+    "symfony/discord-notifier": {
+        "version": "6.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.2",
+            "ref": "1bbc2f7c212346491efde98bf55a3f689056ed3f"
+        }
     },
     "symfony/doctrine-bridge": {
         "version": "v6.0.7"
@@ -346,6 +343,18 @@
         },
         "files": [
             "./config/packages/monolog.yaml"
+        ]
+    },
+    "symfony/notifier": {
+        "version": "6.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.0",
+            "ref": "c31585e252b32fe0e1f30b1f256af553f4a06eb9"
+        },
+        "files": [
+            "./config/packages/notifier.yaml"
         ]
     },
     "symfony/options-resolver": {
