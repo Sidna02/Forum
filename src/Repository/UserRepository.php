@@ -25,6 +25,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
+
     }
 
     /**
@@ -110,8 +111,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
     public function countBirthDatesByYear()
     {
-        $emConfig = $this->_em->getConfiguration();
-        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
+
         $query = $this->_em->createQuery('SELECT YEAR(u.birthdate) y, count(u) c  FROM App:User u WHERE u.birthdate is NOT NULL GROUP BY y ORDER BY y ASC');
         return $users = $query->getResult();
     }

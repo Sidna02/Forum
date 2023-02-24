@@ -73,7 +73,6 @@ class RegistrationController extends AbstractController
             $this->logger->error($e->getMessage());
             $entityManager =
             $this->addflash('registration_error', "An error has occured while you were trying to register. Please try again later.");
-            throw $e;
             return new Response("An error has occured while you were trying to register. Please try again later.");
         }
     }
@@ -105,6 +104,6 @@ class RegistrationController extends AbstractController
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_login');
     }
 }
