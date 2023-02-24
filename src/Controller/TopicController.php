@@ -55,7 +55,7 @@ class TopicController extends AbstractController
     {
         $pager = $pagerService->getPagerForTopics($category);
 
-        return $this->render('topic/list.html.twig.', [
+        return $this->render('topic/list.html.twig', [
             'topics' => $pager,
             'currentCategory' => $category,
 
