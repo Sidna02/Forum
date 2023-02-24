@@ -69,7 +69,7 @@ class TopicController extends AbstractController
         $pager = $pagerService->getPagerForComments($topic, $currentPage);
 
 
-        return $this->render('topic/view_topic.html.twig.', [
+        return $this->render('topic/view_topic.html.twig', [
             'comments' => $pager,
             'topic' => $topic,
         ]);
